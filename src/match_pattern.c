@@ -47,6 +47,68 @@ static void match_naive_exact(const Chars_holder *P, const Chars_holder *S)
 
 
 /****************************************************************************
+ * An implementation of the "naive" method for inexact matching on amino acids.
+ * 
+ * Due to how few ambiguity codes there are, we can match by just hardcoding 
+ * the few ambiguities we actually find and matching the rest with naive-exact.
+ * The simplest fast way to do this I could come up with is to implement a simple
+ * regex solver using a deterministic finite automata, which significantly 
+ * outperforms the regex versions in PCRE/Perl/Python.
+ * See https://swtch.com/~rsc/regexp/regexp1.html for more info.
+ * 
+ * Note that R should not choose this method if there are no ambiguities in 
+ * the sequence--this will be much slower than naive_exact.
+ */
+
+static void match_aa_naive_inexact(const Chars_holder *P, const Chars_holder *S)
+{
+	const char *p, *s;
+	int plen, slen, start, n2;
+
+	if (P->length <= 0)
+		error("empty pattern");
+	p = P->ptr;
+	plen = P->length;
+	s = S->ptr;
+	slen = S->length;
+
+	// Build the search tree
+	char pattern[2*plen];
+	char l;
+	for(int i=0; i<plen; i++){
+		l = *(p+i);
+		switch(l) {
+			case 'B':
+				pattern[2*i] = 'D';
+				pattern[2*i+1] = 'N';
+				break;
+			case 'J':
+				pattern[2*i] = 'L';
+				pattern[2*i+1] = 'J';
+				break;
+			case 'Z':
+				pattern[2*i] = 'E';
+				pattern[2*i+1] = 'Q';
+				break;
+			case 'X':
+				l = '*';
+			default:
+				pattern[2*i] = l;
+				pattern[2*i+1] = l;
+		}
+	}
+
+	// Check for the pattern
+	for (start = 1, n2 = plen; n2 <= slen; start++, n2++, s++) {
+		for(i=0; i<plen && (pattern[2*i]=='*' || pattern[2*i]==*(s+i) || pattern[2*i+1]==*(s+i)); i++);
+		if (i==plen)
+			_report_match(start, P->length);
+	}
+	return;
+}
+
+
+/****************************************************************************
  * An implementation of the "naive" method for inexact matching.
  */
 
