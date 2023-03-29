@@ -72,37 +72,37 @@ static void match_aa_naive_inexact(const Chars_holder *P, const Chars_holder *S)
 	s = S->ptr;
 	slen = S->length;
 
-	// Build the search tree
-	char pattern[2*plen];
-	char l;
-	for(int i=0; i<plen; i++){
-		l = *(p+i);
-		switch(l) {
-			case 'B':
-				pattern[2*i] = 'D';
-				pattern[2*i+1] = 'N';
-				break;
-			case 'J':
-				pattern[2*i] = 'L';
-				pattern[2*i+1] = 'J';
-				break;
-			case 'Z':
-				pattern[2*i] = 'E';
-				pattern[2*i+1] = 'Q';
-				break;
-			case 'X':
-				l = '*';
-			default:
-				pattern[2*i] = l;
-				pattern[2*i+1] = l;
-		}
-	}
-
 	// Check for the pattern
+	char match, *v, *l;
+	int i;
 	for (start = 1, n2 = plen; n2 <= slen; start++, n2++, s++) {
-		for(i=0; i<plen && (pattern[2*i]=='*' || pattern[2*i]==*(s+i) || pattern[2*i+1]==*(s+i)); i++);
+		for(i=0, v=s, l=p; i<plen; i++, v++, l++){
+			match = 0;
+			Rprintf("%d %d; ", *l, *v);
+			switch(*l) {
+				case 23:
+					// B = ND
+					match = (*v==3) || (*v==4) || (*v==23);
+					break;
+				case 24:
+					// J = IL
+					match = (*v==10) || (*v==11) || (*v==24);
+					break;
+				case 25:
+					// Z = QE
+					match = (*v==5) || (*v==6) || (*v==25);
+					break;
+				case 26:
+					match = 1;
+					break;
+				default:
+					match = *v==*p;
+			}
+			if(match==0) break;
+		}
 		if (i==plen)
 			_report_match(start, P->length);
+		Rprintf("\n");
 	}
 	return;
 }
@@ -160,6 +160,8 @@ void _match_pattern_XString(const Chars_holder *P, const Chars_holder *S,
 		match_naive_inexact(P, S, max_nmis, min_nmis, fixedP, fixedS);
 	else if (strcmp(algo, "naive-exact") == 0)
 		match_naive_exact(P, S);
+	else if (strcmp(algo, "aa-naive-inexact") == 0)
+		match_aa_naive_inexact(P, S);
 	else if (strcmp(algo, "boyer-moore") == 0)
 		_match_pattern_boyermoore(P, S, -1, 0);
 	else if (strcmp(algo, "shift-or") == 0)

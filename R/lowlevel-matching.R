@@ -96,9 +96,9 @@ normargFixed <- function(fixed, subject, argname="fixed")
                  "with no duplicated")
         fixed <- c("pattern" %in% fixed, "subject" %in% fixed)
     }
-    if (!all(fixed) && !(seqtype(subject) %in% c("DNA", "RNA")))
-        stop("'", argname, "' value only supported for a DNA or RNA subject ",
-             "(you can only use 'fixed=TRUE' with your subject)")
+    #if (!all(fixed) && !(seqtype(subject) %in% c("DNA", "RNA")))
+    #    stop("'", argname, "' value only supported for a DNA or RNA subject ",
+    #         "(you can only use 'fixed=TRUE' with your subject)")
     fixed
 }
 

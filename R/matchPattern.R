@@ -333,13 +333,13 @@ setMethod("countPattern", "MaskedXString",
                                       algorithm,
                                       count.only=FALSE)
 {
-    if (!isTRUEorFALSE(count.only)) 
+    if (!isTRUEorFALSE(count.only))
         stop("'count.only' must be TRUE or FALSE")
     if (!is(subject, "XStringSet"))
         subject <- XStringSet(NULL, subject)
     algo <- normargAlgorithm(algorithm)
-    if (isCharacterAlgo(algo)) 
-        stop("'subject' must be a single (non-empty) string ", 
+    if (isCharacterAlgo(algo))
+        stop("'subject' must be a single (non-empty) string ",
              "for this algorithm")
     pattern <- normargPattern(pattern, subject)
     max.mismatch <- normargMaxMismatch(max.mismatch)
@@ -388,7 +388,7 @@ setMethod("vmatchPattern", "XStringSet",
     function(pattern, subject,
              max.mismatch=0, min.mismatch=0, with.indels=FALSE, fixed=TRUE,
              algorithm="auto")
-        .XStringSet.vmatchPattern(pattern, subject, 
+        .XStringSet.vmatchPattern(pattern, subject,
                                   max.mismatch, min.mismatch, with.indels, fixed,
                                   algorithm)
 )
@@ -421,7 +421,7 @@ setMethod("vcountPattern", "character",
     function(pattern, subject,
              max.mismatch=0, min.mismatch=0, with.indels=FALSE, fixed=TRUE,
              algorithm="auto")
-        .XStringSet.vmatchPattern(pattern, subject, 
+        .XStringSet.vmatchPattern(pattern, subject,
                                   max.mismatch, min.mismatch, with.indels, fixed,
                                   algorithm,
                                   count.only=TRUE)

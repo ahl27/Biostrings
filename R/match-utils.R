@@ -62,6 +62,8 @@ normargAlgorithm <- function(algorithm)
         if (pattern_max_length <= .Clongint.nbits())
             algos <- c(algos, "shift-or")
         algos <- c(algos, "naive-exact")
+    } else if(!any(fixed) && seqtype(pattern)=='AA'){
+        algos <- c(algos, "aa-naive-inexact")
     } else {
         if (min.mismatch == 0L && fixed[1] == fixed[2]
          && pattern_max_length <= .Clongint.nbits())

@@ -298,70 +298,70 @@ attr(RNA_GENETIC_CODE, "alt_init_codons") <-
          Starts = c("-------------------M------------",
                     "---M----------------------------"))
 
-### The following genetic codes are listed on
-###   https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
-### but not on
-###   ftp://ftp.ncbi.nih.gov/entrez/misc/data/gc.prt
-### They pose the problem that they use stop codons that are not always
-### translated as such. For example, in code 27 below, TGA can mean STOP
-### or be translated as Trp but I don't see any information on the
-### https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi page about
-### when one or the other occurs. So I've no idea how could one use these
-### codes to predict translation. More precisely, translate() needs to be
-### deterministic and I don't see how it could with these genetic codes.
- 
-#    list(name   = "Karyorelict Nuclear",
-#         name2  = NA,
-#         id     = 27,
-#         AAs    = c("FFLLSSSSYYQQCCWWLLLAPPPPHHQQRRRR",
-#                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
-#         Starts = c("--------------------------------",
-#                    "---M----------------------------")),
+    ### The following genetic codes are listed on
+    ###   https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+    ### but not on
+    ###   ftp://ftp.ncbi.nih.gov/entrez/misc/data/gc.prt
+    ### They pose the problem that they use stop codons that are not always
+    ### translated as such. For example, in code 27 below, TGA can mean STOP
+    ### or be translated as Trp but I don't see any information on the
+    ### https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi page about
+    ### when one or the other occurs. So I've no idea how could one use these
+    ### codes to predict translation. More precisely, translate() needs to be
+    ### deterministic and I don't see how it could with these genetic codes.
 
-#    list(name   = "Condylostoma Nuclear",
-#         name2  = NA,
-#         id     = 28,
-#         AAs    = c("FFLLSSSSYYQQCCWWLLLAPPPPHHQQRRRR",
-#                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
-#         Starts = c("--------------------------------",
-#                    "---M----------------------------")),
+    #    list(name   = "Karyorelict Nuclear",
+    #         name2  = NA,
+    #         id     = 27,
+    #         AAs    = c("FFLLSSSSYYQQCCWWLLLAPPPPHHQQRRRR",
+    #                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
+    #         Starts = c("--------------------------------",
+    #                    "---M----------------------------")),
 
-#    list(name   = "Mesodinium Nuclear",
-#         name2  = NA,
-#         id     = 29,
-#         AAs    = c("FFLLSSSSYYYYCC*WLLLAPPPPHHQQRRRR",
-#                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
-#         Starts = c("--------------------------------",
-#                    "---M----------------------------")),
+    #    list(name   = "Condylostoma Nuclear",
+    #         name2  = NA,
+    #         id     = 28,
+    #         AAs    = c("FFLLSSSSYYQQCCWWLLLAPPPPHHQQRRRR",
+    #                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
+    #         Starts = c("--------------------------------",
+    #                    "---M----------------------------")),
 
-#    list(name   = "Peritrich Nuclear",
-#         name2  = NA,
-#         id     = 30,
-#         AAs    = c("FFLLSSSSYYEECC*WLLLAPPPPHHQQRRRR",
-#                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
-#         Starts = c("--------------------------------",
-#                    "---M----------------------------")),
+    #    list(name   = "Mesodinium Nuclear",
+    #         name2  = NA,
+    #         id     = 29,
+    #         AAs    = c("FFLLSSSSYYYYCC*WLLLAPPPPHHQQRRRR",
+    #                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
+    #         Starts = c("--------------------------------",
+    #                    "---M----------------------------")),
 
-#    list(name   = "Blastocrithidia Nuclear",
-#         name2  = NA,
-#         id     = 31,
-#         AAs    = c("FFLLSSSSYYEECCWWLLLLPPPPHHQQRRRR",
-#                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
-#         Starts = c("--------------------------------",
-#                    "---M----------------------------"))
+    #    list(name   = "Peritrich Nuclear",
+    #         name2  = NA,
+    #         id     = 30,
+    #         AAs    = c("FFLLSSSSYYEECC*WLLLAPPPPHHQQRRRR",
+    #                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
+    #         Starts = c("--------------------------------",
+    #                    "---M----------------------------")),
+
+    #    list(name   = "Blastocrithidia Nuclear",
+    #         name2  = NA,
+    #         id     = 31,
+    #         AAs    = c("FFLLSSSSYYEECCWWLLLLPPPPHHQQRRRR",
+    #                    "IIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"),
+    #         Starts = c("--------------------------------",
+    #                    "---M----------------------------"))
 )
 
 ### All the known codes summarized in one big data.frame:
 GENETIC_CODE_TABLE <- do.call(rbind,
-    lapply(.genetic_code_table,
-        function(genetic_code) {
-            data.frame(name=genetic_code$name,
-                       name2=as.character(genetic_code$name2),
-                       id=as.character(genetic_code$id),
-                       AAs=paste0(genetic_code$AAs, collapse=""),
-                       Starts=paste0(genetic_code$Starts, collapse=""),
-                       stringsAsFactors=FALSE)
-        }))
+                              lapply(.genetic_code_table,
+                                     function(genetic_code) {
+                                         data.frame(name=genetic_code$name,
+                                                    name2=as.character(genetic_code$name2),
+                                                    id=as.character(genetic_code$id),
+                                                    AAs=paste0(genetic_code$AAs, collapse=""),
+                                                    Starts=paste0(genetic_code$Starts, collapse=""),
+                                                    stringsAsFactors=FALSE)
+                                     }))
 
 .solve_id_or_name2 <- function(id_or_name2, full.search=FALSE)
 {

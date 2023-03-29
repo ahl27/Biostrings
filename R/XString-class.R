@@ -212,47 +212,47 @@ setGeneric("XString", signature="x",
 }
 
 setMethod("XString", "character",
-    function(seqtype, x, start=NA, end=NA, width=NA)
-    {
-        if (is.null(seqtype))
-            seqtype <- "B"
-        .charToXString(seqtype, x, start, end, width)
-    }
+          function(seqtype, x, start=NA, end=NA, width=NA)
+          {
+              if (is.null(seqtype))
+                  seqtype <- "B"
+              .charToXString(seqtype, x, start, end, width)
+          }
 )
 
 setMethod("XString", "factor",
-    function(seqtype, x, start=NA, end=NA, width=NA)
-    {
-        if (is.null(seqtype))
-            seqtype <- "B"
-        .charToXString(seqtype, as.character(x), start, end, width)
-    }
+          function(seqtype, x, start=NA, end=NA, width=NA)
+          {
+              if (is.null(seqtype))
+                  seqtype <- "B"
+              .charToXString(seqtype, as.character(x), start, end, width)
+          }
 )
 
 setMethod("XString", "XString",
-    function(seqtype, x, start=NA, end=NA, width=NA)
-    {
-        ans <- subseq(x, start=start, end=end, width=width)
-        ## `seqtype<-` must be called even when user supplied 'seqtype' is
-        ## NULL because we want to enforce downgrade to a B/DNA/RNA/AAString
-        ## instance
-        if (is.null(seqtype))
-            seqtype <- seqtype(x)
-        seqtype(ans) <- seqtype
-        ans
-    }
+          function(seqtype, x, start=NA, end=NA, width=NA)
+          {
+              ans <- subseq(x, start=start, end=end, width=width)
+              ## `seqtype<-` must be called even when user supplied 'seqtype' is
+              ## NULL because we want to enforce downgrade to a B/DNA/RNA/AAString
+              ## instance
+              if (is.null(seqtype))
+                  seqtype <- seqtype(x)
+              seqtype(ans) <- seqtype
+              ans
+          }
 )
 
 ### Just because of the silly "AsIs" objects found in the probe packages
 ### (e.g. drosophila2probe$sequence)
 setMethod("XString", "AsIs",
-    function(seqtype, x, start=NA, end=NA, width=NA)
-    {
-        if (!is.character(x))
-            stop("unsupported input type")
-        class(x) <- "character" # keeps the names (unlike as.character())
-        XString(seqtype, x, start=start, end=end, width=width)
-    }
+          function(seqtype, x, start=NA, end=NA, width=NA)
+          {
+              if (!is.character(x))
+                  stop("unsupported input type")
+              class(x) <- "character" # keeps the names (unlike as.character())
+              XString(seqtype, x, start=start, end=end, width=width)
+          }
 )
 
 
@@ -278,16 +278,16 @@ AAString <- function(x="", start=1, nchar=NA)
 ###
 
 setAs("XString", "BString",
-    function(from) {seqtype(from) <- "B"; from}
+      function(from) {seqtype(from) <- "B"; from}
 )
 setAs("XString", "DNAString",
-    function(from) {seqtype(from) <- "DNA"; from}
+      function(from) {seqtype(from) <- "DNA"; from}
 )
 setAs("XString", "RNAString",
-    function(from) {seqtype(from) <- "RNA"; from}
+      function(from) {seqtype(from) <- "RNA"; from}
 )
 setAs("XString", "AAString",
-    function(from) {seqtype(from) <- "AA"; from}
+      function(from) {seqtype(from) <- "AA"; from}
 )
 
 setAs("character", "BString", function(from) BString(from))
@@ -297,8 +297,8 @@ setAs("character", "AAString", function(from) AAString(from))
 setAs("character", "XString", function(from) BString(from))
 
 setMethod("as.character", "XString",
-    function(x)
-        extract_character_from_XString_by_ranges(x, 1L, length(x))
+          function(x)
+              extract_character_from_XString_by_ranges(x, 1L, length(x))
 )
 
 setMethod("toString", "XString", function(x, ...) as.character(x))
@@ -306,23 +306,23 @@ setMethod("toString", "XString", function(x, ...) as.character(x))
 ### FIXME: Sometimes returns a vector sometimes a factor. This needs to be
 ### sorted out. The use case is that as.data.frame() relies on this.
 setMethod("as.vector", "XString",
-    function(x)
-    {
-        codes <- xscodes(x)
-        x_alphabet <- names(codes)
-        if (is.null(x_alphabet)) {
-            ans <- rawToChar(as.raw(x), multiple=TRUE)
-            x_alphabet <- alphabet(x)
-            if (!is.null(x_alphabet))
-                ans <- factor(ans, levels=x_alphabet)
-            return(ans)
-        }
-        code2pos <- integer(length(codes))
-        code2pos[codes] <- seq_along(codes)
-        ans <- code2pos[as.integer(x)]
-        attributes(ans) <- list(levels=x_alphabet, class="factor")
-        ans
-    }
+          function(x)
+          {
+              codes <- xscodes(x)
+              x_alphabet <- names(codes)
+              if (is.null(x_alphabet)) {
+                  ans <- rawToChar(as.raw(x), multiple=TRUE)
+                  x_alphabet <- alphabet(x)
+                  if (!is.null(x_alphabet))
+                      ans <- factor(ans, levels=x_alphabet)
+                  return(ans)
+              }
+              code2pos <- integer(length(codes))
+              code2pos[codes] <- seq_along(codes)
+              ans <- code2pos[as.integer(x)]
+              attributes(ans) <- list(levels=x_alphabet, class="factor")
+              ans
+          }
 )
 
 
@@ -356,27 +356,27 @@ toSeqSnippet <- function(x, width)
     }
     if (is(x, "XString") || is(x, "MaskedXString"))
         class(ans) <- c(seqtype(x), class(ans))  # for S3 dispatch
-                                                 # in add_colors()
+    # in add_colors()
     ans
 }
 
 setMethod("show", "XString",
-    function(object)
-    {
-        object_len <- object@length
-        cat(object_len, "-letter ", class(object), " object\n", sep="")
-        snippet <- toSeqSnippet(object, getOption("width") - 5L)
-        cat("seq: ", add_colors(snippet), "\n", sep="")
-    }
+          function(object)
+          {
+              object_len <- object@length
+              cat(object_len, "-letter ", class(object), " object\n", sep="")
+              snippet <- toSeqSnippet(object, getOption("width") - 5L)
+              cat("seq: ", add_colors(snippet), "\n", sep="")
+          }
 )
 
 setMethod("showAsCell", "XString",
-    function(object)
-    {
-        ans <- safeExplode(as.character(object))
-        class(ans) <- c(seqtype(object), class(ans))
-        ans
-    }
+          function(object)
+          {
+              ans <- safeExplode(as.character(object))
+              class(ans) <- c(seqtype(object), class(ans))
+              ans
+          }
 )
 
 
@@ -409,40 +409,40 @@ setMethod("showAsCell", "XString",
 }
 
 setMethod("==", signature(e1="XString", e2="XString"),
-    function(e1, e2)
-    {
-        if (!comparable_seqtypes(seqtype(e1), seqtype(e2))) {
-            class1 <- class(e1)
-            class2 <- class(e2)
-            stop("comparison between a \"", class1, "\" instance ",
-                 "and a \"", class2, "\" instance ",
-                 "is not supported")
-        }
-        .XString.equal(e1, e2)
-    }
+          function(e1, e2)
+          {
+              if (!comparable_seqtypes(seqtype(e1), seqtype(e2))) {
+                  class1 <- class(e1)
+                  class2 <- class(e2)
+                  stop("comparison between a \"", class1, "\" instance ",
+                       "and a \"", class2, "\" instance ",
+                       "is not supported")
+              }
+              .XString.equal(e1, e2)
+          }
 )
 setMethod("==", signature(e1="BString", e2="character"),
-    function(e1, e2)
-    {
-        if (length(e2) != 1 || e2 %in% c("", NA))
-            stop("comparison between a \"BString\" object and a character vector ",
-                 "of length != 1 or an empty string or an NA ",
-                 "is not supported")
-        .XString.equal(e1, BString(e2))
-    }
+          function(e1, e2)
+          {
+              if (length(e2) != 1 || e2 %in% c("", NA))
+                  stop("comparison between a \"BString\" object and a character vector ",
+                       "of length != 1 or an empty string or an NA ",
+                       "is not supported")
+              .XString.equal(e1, BString(e2))
+          }
 )
 setMethod("==", signature(e1="character", e2="BString"),
-    function(e1, e2) e2 == e1
+          function(e1, e2) e2 == e1
 )
 
 setMethod("!=", signature(e1="XString", e2="XString"),
-    function(e1, e2) !(e1 == e2)
+          function(e1, e2) !(e1 == e2)
 )
 setMethod("!=", signature(e1="BString", e2="character"),
-    function(e1, e2) !(e1 == e2)
+          function(e1, e2) !(e1 == e2)
 )
 setMethod("!=", signature(e1="character", e2="BString"),
-    function(e1, e2) !(e1 == e2)
+          function(e1, e2) !(e1 == e2)
 )
 
 
@@ -451,11 +451,11 @@ setMethod("!=", signature(e1="character", e2="BString"),
 ###
 
 setMethod("substr", "XString",
-    function(x, start, stop) subseq(x, start=start, end=stop)
+          function(x, start, stop) subseq(x, start=start, end=stop)
 )
 
 setMethod("substring", "XString",
-    function(text, first, last=1000000L) subseq(text, start=first, end=last)
+          function(text, first, last=1000000L) subseq(text, start=first, end=last)
 )
 
 
@@ -466,18 +466,18 @@ setMethod("substring", "XString",
 ### Update XString objects created before the big internal renaming I made
 ### in IRanges 1.3.76.
 setMethod("updateObject", "XString",
-    function(object, ..., verbose=FALSE)
-    {
-        if (!is(try(object@shared, silent=TRUE), "try-error"))
-            return(object)
-        xdata <- object@xdata
-        ans_shared <- new("SharedRaw")
-        ans_shared@xp <- xdata@xp
-        ans_shared@.link_to_cached_object=xdata@.link_to_cached_object
-        new(class(object),
-            shared=ans_shared,
-            offset=object@offset,
-            length=object@length)
-    }
+          function(object, ..., verbose=FALSE)
+          {
+              if (!is(try(object@shared, silent=TRUE), "try-error"))
+                  return(object)
+              xdata <- object@xdata
+              ans_shared <- new("SharedRaw")
+              ans_shared@xp <- xdata@xp
+              ans_shared@.link_to_cached_object=xdata@.link_to_cached_object
+              new(class(object),
+                  shared=ans_shared,
+                  offset=object@offset,
+                  length=object@length)
+          }
 )
 
