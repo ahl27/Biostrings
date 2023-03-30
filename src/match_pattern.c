@@ -80,20 +80,21 @@ static void match_aa_naive_inexact(const Chars_holder *P, const Chars_holder *S)
 			match = 0;
 			Rprintf("%d %d; ", *l, *v);
 			switch(*l) {
-				case 23:
+				case 'B':
 					// B = ND
-					match = (*v==3) || (*v==4) || (*v==23);
+					match = (*v=='N') || (*v=='D') || (*v=='B');
 					break;
-				case 24:
+				case 'J':
 					// J = IL
-					match = (*v==10) || (*v==11) || (*v==24);
+					match = (*v=='I') || (*v=='L') || (*v=='J');
 					break;
-				case 25:
+				case 'Z':
 					// Z = QE
-					match = (*v==5) || (*v==6) || (*v==25);
+					match = (*v=='Q') || (*v=='E') || (*v=='Z');
 					break;
-				case 26:
-					match = 1;
+				case 'X':
+					// X matches any amino acid
+					match = *v >= 'A';
 					break;
 				default:
 					match = *v==*p;
