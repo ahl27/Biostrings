@@ -79,11 +79,11 @@ selectAlgo <- function(algo, pattern, max.mismatch, min.mismatch,
                           with.indels, fixed)
     if (algo == "auto")
         return(algos[1])
-    if(seqtype(pattern)=='AA' && length(pos <- which("naive-inexact" == algo)))
-        algo[pos] <- "aa-naive-inexact"
+    if(seqtype(pattern)=='AA' && length(p <- which("naive-inexact" == algo)))
+        algo[p] <- "aa-naive-inexact"
     if (!(algo %in% algos))
         stop("valid algos for your string matching problem (best suited first): ",
-             paste(paste("\"", algos, "\"", sep=""), collapse=", "))
+             paste(paste("\"", algos[algos!="aa-naive-inexact"], "\"", sep=""), collapse=", "))
     algo
 }
 
