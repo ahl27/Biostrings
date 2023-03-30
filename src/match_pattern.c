@@ -78,7 +78,6 @@ static void match_aa_naive_inexact(const Chars_holder *P, const Chars_holder *S)
 	for (start = 1, n2 = plen; n2 <= slen; start++, n2++, s++) {
 		for(i=0, v=s, l=p; i<plen; i++, v++, l++){
 			match = 0;
-			Rprintf("%d %d; ", *l, *v);
 			switch(*l) {
 				case 'B':
 					// B = ND
@@ -103,7 +102,6 @@ static void match_aa_naive_inexact(const Chars_holder *P, const Chars_holder *S)
 		}
 		if (i==plen)
 			_report_match(start, P->length);
-		Rprintf("\n");
 	}
 	return;
 }
