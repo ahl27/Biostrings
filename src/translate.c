@@ -8,6 +8,7 @@
 #define TRANSLATE_TO_X	3
 
 static char errmsg_buf[200];
+static const char AA_GAP_CHAR = '-';
 
 /*
  * Returns -1 if error, or the nb of trailing letters that were ignored
@@ -21,7 +22,6 @@ static int fast_translate(const Chars_holder *dna, Chars_holder *aa,
 	int phase, i, lkup_key;
 	const char *c;
 	char aa_letter;
-	int check_gap = 0;
 	aa->length = phase = 0;
 	_reset_twobit_signature(teb);
 	for (i = 0, c = dna->ptr; i < dna->length; i++, c++) {
@@ -38,7 +38,7 @@ static int fast_translate(const Chars_holder *dna, Chars_holder *aa,
 				phase++;
 				continue;
 			}
-			aa_letter = '-';
+			aa_letter = AA_GAP_CHAR;
 		} else {
 			lkup_key = _shift_twobit_signature(teb, *c);
 			if (teb->lastin_twobit == NA_INTEGER) {
@@ -74,15 +74,19 @@ static int translate(const Chars_holder *dna, Chars_holder *aa,
 		     SEXP lkup, SEXP init_lkup,
 		     int if_non_ambig, int if_ambig)
 {
-	int phase, is_fuzzy, i, lkup_key, offset;
+	int phase, is_fuzzy, i, lkup_key, offset, is_gap;
 	const char *c;
 	char aa_letter;
 
-	aa->length = phase = is_fuzzy = 0;
+	aa->length = phase = is_fuzzy = is_gap = 0;
 	for (i = 0, c = dna->ptr; i < dna->length; i++, c++) {
 		if (*c == skip_code)
 			continue;
 		offset = byte2offset->byte2code[(unsigned char) *c];
+		if(*c == gap_code){
+			is_gap = 1;
+			offset = 1; // temporary value to stop early error
+		}
 		if (offset == NA_INTEGER) {
 			snprintf(errmsg_buf, sizeof(errmsg_buf),
 				 "not a base at pos %d", i + 1);
@@ -106,7 +110,16 @@ static int translate(const Chars_holder *dna, Chars_holder *aa,
 		} else {
 			aa_letter = (char) INTEGER(lkup)[lkup_key];
 		}
-		if (is_fuzzy) {
+		if (is_gap){
+			/* codon contains a gap */
+			if(*c != *(c-1) || *c != *(c-2)){
+				snprintf(errmsg_buf, sizeof(errmsg_buf),
+					"unable to resolve gap codon at pos %d-%d",
+					i-1, i+1);
+				return -1;
+			}
+			aa_letter = AA_GAP_CHAR;
+		} else if (is_fuzzy) {
 			/* codon is fuzzy */
 			if (aa_letter != 'X') {
 				/* non-ambiguous fuzzy codon */
@@ -133,7 +146,7 @@ static int translate(const Chars_holder *dna, Chars_holder *aa,
 		/* aa->ptr is a const char * so we need to cast it to
 		   char * before we can write to it */
 		((char *) aa->ptr)[aa->length++] = aa_letter;
-		phase = is_fuzzy = 0;
+		phase = is_fuzzy = is_gap = 0;
 	}
 	return phase;
 }
