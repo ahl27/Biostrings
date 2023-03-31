@@ -117,8 +117,11 @@ codons(x)
   is used to translate codons into amino acids but the user can
   supply a different genetic code via the \code{genetic.code} argument.
 
+  Codons comprised entirely of gaps are translated to gaps.
+  Codons not entirely comprised of gaps will throw an error.
+
   \code{codons} is a utility for extracting the codons involved
-  in this translation without translating them. 
+  in this translation without translating them.
 }
 
 \value{
@@ -192,6 +195,16 @@ translate(dna2, if.fuzzy.codon="solve")
 ## become ambiguous with another genetic code, and vice versa:
 translate(dna2, genetic.code=SGC1, if.fuzzy.codon="solve")
 
+## Gap codons are translated to gaps
+gapdna1 <- DNAString("TTG---ATATGG---CCCTTATAA")
+translate(gapdna1)
+
+## If gaps are not in multiples of 3, an error is thrown
+gapdna2 <- DNAString("TTG--ATATGG---CCCTTATAA")
+\dontrun{
+  translate(gapdna2) # error because of codon 2, '--A'
+}
+
 ## ---------------------------------------------------------------------
 ## 2. TRANSLATING AN OPEN READING FRAME
 ## ---------------------------------------------------------------------
@@ -227,18 +240,18 @@ codons(y1)[20:28]
 dna3 <- DNAStringSet(c("ATC", "GCTG", "CGACT"))
 translate(reverseComplement(dna3))
 
-## Translate sequences on both '+' and '-' strand across all 
+## Translate sequences on both '+' and '-' strand across all
 ## possible reading frames (i.e., codon position 1, 2 or 3):
-## First create a DNAStringSet of '+' and '-' strand sequences, 
+## First create a DNAStringSet of '+' and '-' strand sequences,
 ## removing the nucleotides prior to the reading frame start position.
-dna3_subseqs <- lapply(1:3, function(pos) 
+dna3_subseqs <- lapply(1:3, function(pos)
     subseq(c(dna3, reverseComplement(dna3)), start=pos))
 ## Translation of 'dna3_subseqs' produces a list of length 3, each with
 ## 6 elements (3 '+' strand results followed by 3 '-' strand results).
 lapply(dna3_subseqs, translate)
 
 ## Note that translate() throws a warning when the length of the sequence
-## is not divisible by 3. To avoid this warning wrap the function in 
+## is not divisible by 3. To avoid this warning wrap the function in
 ## suppressWarnings().
 }
 
