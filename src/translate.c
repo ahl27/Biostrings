@@ -14,33 +14,47 @@ static char errmsg_buf[200];
  * if successful (0, 1, or 2).
  */
 static int fast_translate(const Chars_holder *dna, Chars_holder *aa,
-			  char skip_code,
+			  char skip_code, char gap_code,
 			  TwobitEncodingBuffer *teb,
 			  SEXP lkup, SEXP init_lkup)
 {
 	int phase, i, lkup_key;
 	const char *c;
 	char aa_letter;
-
+	int check_gap = 0;
 	aa->length = phase = 0;
 	_reset_twobit_signature(teb);
 	for (i = 0, c = dna->ptr; i < dna->length; i++, c++) {
 		if (*c == skip_code)
 			continue;
-		lkup_key = _shift_twobit_signature(teb, *c);
-		if (teb->lastin_twobit == NA_INTEGER) {
-			snprintf(errmsg_buf, sizeof(errmsg_buf),
-				 "not a base at pos %d", i + 1);
-			return -1;
-		}
-		if (phase < 2) {
-			phase++;
-			continue;
-		}
-		if (aa->length == 0) {
-			aa_letter = (char) INTEGER(init_lkup)[lkup_key];
+		// check for gap codons
+		if (*c == gap_code || *(c-phase)==gap_code){
+			if(*c != *(c-phase)){
+				snprintf(errmsg_buf, sizeof(errmsg_buf),
+					"unable to resolve gap codon at pos %d-%d", i-phase+1, i-phase+3);
+				return -1;
+			}
+			if(phase < 2){
+				phase++;
+				continue;
+			}
+			aa_letter = '-';
 		} else {
-			aa_letter = (char) INTEGER(lkup)[lkup_key];
+			lkup_key = _shift_twobit_signature(teb, *c);
+			if (teb->lastin_twobit == NA_INTEGER) {
+				snprintf(errmsg_buf, sizeof(errmsg_buf),
+					 "not a base at pos %d", i + 1);
+				return -1;
+			}
+			if (phase < 2) {
+				phase++;
+				continue;
+			}
+			if (aa->length == 0) {
+				aa_letter = (char) INTEGER(init_lkup)[lkup_key];
+			} else {
+				aa_letter = (char) INTEGER(lkup)[lkup_key];
+			}
 		}
 		/* aa->ptr is a const char * so we need to cast it to
 		   char * before we can write to it */
@@ -55,7 +69,7 @@ static int fast_translate(const Chars_holder *dna, Chars_holder *aa,
  * if successful (0, 1, or 2).
  */
 static int translate(const Chars_holder *dna, Chars_holder *aa,
-		     char skip_code,
+		     char skip_code, char gap_code,
 		     int ncodes, ByteTrTable *byte2offset,
 		     SEXP lkup, SEXP init_lkup,
 		     int if_non_ambig, int if_ambig)
@@ -128,10 +142,13 @@ static int translate(const Chars_holder *dna, Chars_holder *aa,
  * --- .Call ENTRY POINT ---
  * Return an AAStringSet object.
  */
-SEXP DNAStringSet_translate(SEXP x, SEXP skip_code, SEXP dna_codes,
+SEXP DNAStringSet_translate(SEXP x,
+		SEXP skip_code, SEXP gap_code,
+		SEXP dna_codes,
 		SEXP lkup, SEXP init_lkup,
 		SEXP if_non_ambig, SEXP if_ambig)
 {
+	char gap_code0;
 	char skip_code0;
 	int ncodes, if_non_ambig0, if_ambig0, ans_length, i, errcode;
 	TwobitEncodingBuffer teb;
@@ -142,6 +159,7 @@ SEXP DNAStringSet_translate(SEXP x, SEXP skip_code, SEXP dna_codes,
 	SEXP ans, width, ans_width;
 
 	skip_code0 = (unsigned char) INTEGER(skip_code)[0];
+	gap_code0 = (unsigned char) INTEGER(gap_code)[0];
 	ncodes = LENGTH(dna_codes);
 	if (LENGTH(lkup) != ncodes * ncodes * ncodes)
 		error("Biostrings internal error in "
@@ -191,9 +209,9 @@ SEXP DNAStringSet_translate(SEXP x, SEXP skip_code, SEXP dna_codes,
 		Y_elt = _get_elt_from_XStringSet_holder(&Y, i);
 		errcode = ncodes == 4 ?
 			fast_translate(&X_elt, &Y_elt,
-				       skip_code0, &teb, lkup, init_lkup) :
+				       skip_code0, gap_code0, &teb, lkup, init_lkup) :
 			translate(&X_elt, &Y_elt,
-				  skip_code0, ncodes, &byte2offset,
+				  skip_code0, gap_code0, ncodes, &byte2offset,
 				  lkup, init_lkup,
 				  if_non_ambig0, if_ambig0);
 		if (errcode == -1) {
