@@ -195,25 +195,27 @@ setMethod("translate", "MaskedRNAString",
 ###
 
 setGeneric("codons", signature="x",
-    function(x) standardGeneric("codons")
+    function(x, ...) standardGeneric("codons")
 )
 
 
 ### 'x' must be a DNAString or RNAString object
-.XString.codons <- function(x)
+.XString.codons <- function(x, allow.ambiguous=FALSE, ...)
 {
     if (length(x) %% 3L != 0L)
         warning("the number of nucleotides in 'x' is not a multiple of 3")
     ans <- successiveViews(x, rep.int(3L, length(x) %/% 3L))
-    if (alphabetFrequency(ans, baseOnly=TRUE, collapse=TRUE)[["other"]] != 0)
+    if (!allow.ambiguous && alphabetFrequency(ans, baseOnly=TRUE, collapse=TRUE)[["other"]] != 0)
         stop("some trinucleotides in 'x' contain non-base letters")
     ans
 }
 
 ### 'x' is assumed to in the coding strand of the DNA
-setMethod("codons", "DNAString", function(x) .XString.codons(x))
+setMethod("codons", "DNAString",
+          function(x, allow.ambiguous=FALSE, ...) .XString.codons(x, allow.ambiguous, ...))
 
-setMethod("codons", "RNAString", function(x) .XString.codons(x))
+setMethod("codons", "RNAString",
+          function(x, allow.ambiguous=FALSE, ...) .XString.codons(x, allow.ambiguous, ...))
 
 
 ### 'x' must be a MaskedDNAString or MaskedRNAString object.
