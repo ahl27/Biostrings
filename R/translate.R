@@ -222,11 +222,11 @@ setMethod("codons", "RNAString",
 ### Return 1 view per codon. Each view is guaranteed to contain exactly
 ### 3 base letters plus eventually some '+' letters (removed during
 ### translation).
-.MaskedXString.codons <- function(x)
+.MaskedXString.codons <- function(x, allow.ambiguous=FALSE, ...)
 {
     if (nchar(x) %% 3L != 0L)
         warning("the number of unmasked nucleotides in 'x' is not a multiple of 3")
-    if (alphabetFrequency(x, baseOnly=TRUE)[["other"]] != 0)
+    if (!allow.ambiguous && alphabetFrequency(x, baseOnly=TRUE)[["other"]] != 0)
         stop("some trinucleotides in 'x' contain non-base letters")
     ans_length <- nchar(x) %/% 3L
     ans_start <- integer(ans_length)
@@ -250,7 +250,9 @@ setMethod("codons", "RNAString",
     Views(x0, start=ans_start, end=ans_end)
 }
 
-setMethod("codons", "MaskedDNAString", function(x) .MaskedXString.codons(x))
+setMethod("codons", "MaskedDNAString", function(x, allow.ambiguous=FALSE, ...)
+  .MaskedXString.codons(x, allow.ambiguous, ...))
 
-setMethod("codons", "MaskedRNAString", function(x) .MaskedXString.codons(x))
+setMethod("codons", "MaskedRNAString", function(x, allow.ambiguous=FALSE, ...)
+  .MaskedXString.codons(x, allow.ambiguous, ...))
 
