@@ -1,6 +1,3 @@
-library(Biostrings)
-library(testthat)
-
 dnastr <- paste(DNA_ALPHABET, collapse='')
 rnastr <- paste(RNA_ALPHABET, collapse='')
 aastr <- paste(AA_ALPHABET, collapse='')
@@ -21,7 +18,7 @@ test_that("seqtype correctly infers types", {
 })
 
 
-test_that("character conversion works properly", {
+test_that("character, vector conversion works properly", {
 	expect_equal(as.character(DNAString(dnastr)), dnastr)
 	expect_equal(as.character(RNAString(rnastr)), rnastr)
 	expect_equal(as.character(AAString(aastr)), aastr)
@@ -112,29 +109,29 @@ test_that("as.vector methods work correctly", {
 })
 
 test_that("equality methods work as advertised", {
-	expect_equal(DNAString(dnastr) == DNAString(dnastr), TRUE)
-	expect_equal(RNAString(rnastr) == RNAString(rnastr), TRUE)
-	expect_equal(AAString(aastr) == AAString(aastr), TRUE)
-	expect_equal(BString(bstr) == BString(bstr), TRUE)
+	expect_true(DNAString(dnastr) == DNAString(dnastr))
+	expect_true(RNAString(rnastr) == RNAString(rnastr))
+	expect_true(AAString(aastr) == AAString(aastr))
+	expect_true(BString(bstr) == BString(bstr))
 
-	expect_equal(DNAString(dnastr) == DNAString(substr(dnastr, 1, 7)), FALSE)
-	expect_equal(RNAString(rnastr) == RNAString(substr(rnastr, 1, 7)), FALSE)
-	expect_equal(AAString(aastr) == AAString(substr(aastr, 1, 7)), FALSE)
-	expect_equal(BString(bstr) == BString(substr(bstr, 1, 7)), FALSE)
+	expect_false(DNAString(dnastr) == DNAString(substr(dnastr, 1, 7)))
+	expect_false(RNAString(rnastr) == RNAString(substr(rnastr, 1, 7)))
+	expect_false(AAString(aastr) == AAString(substr(aastr, 1, 7)))
+	expect_false(BString(bstr) == BString(substr(bstr, 1, 7)))
 
-	expect_equal(DNAString(dnastr) != DNAString(substr(dnastr, 1, 7)), TRUE)
-	expect_equal(RNAString(rnastr) != RNAString(substr(rnastr, 1, 7)), TRUE)
-	expect_equal(AAString(aastr) != AAString(substr(aastr, 1, 7)), TRUE)
-	expect_equal(BString(bstr) != BString(substr(bstr, 1, 7)), TRUE)
+	expect_true(DNAString(dnastr) != DNAString(substr(dnastr, 1, 7)))
+	expect_true(RNAString(rnastr) != RNAString(substr(rnastr, 1, 7)))
+	expect_true(AAString(aastr) != AAString(substr(aastr, 1, 7)))
+	expect_true(BString(bstr) != BString(substr(bstr, 1, 7)))
 
 
 	## DNA <-> RNA comparison
-	expect_equal(DNAString(dnastr) == RNAString(rnastr), TRUE)
+	expect_true(DNAString(dnastr) == RNAString(rnastr))
 
 	## other B comparisons
-	expect_equal(AAString(aastr) == BString(aastr), TRUE)
-	expect_equal(AAString(aastr) != BString(bstr), TRUE)
-	expect_equal(bstr == BString(bstr), TRUE)
+	expect_true(AAString(aastr) == BString(aastr))
+	expect_true(AAString(aastr) != BString(bstr))
+	expect_true(bstr == BString(bstr))
 
 	## invalid comparisons
 	expect_error(DNAString(dnastr) == AAString(aastr), 'comparison between a "DNAString" instance and a "AAString" instance is not supported')
@@ -177,4 +174,20 @@ test_that("substr, substring methods work correctly", {
 	expect_error(substring(r, 10, 5), "Invalid sequence coordinates")
 	expect_error(substring(a, 10, 5), "Invalid sequence coordinates")
 	expect_error(substring(b, 10, 5), "Invalid sequence coordinates")
+
+	# `[` dispatch
+	expect_equal(as.character(d[1:10]), substr(dnastr, 1, 10))
+	expect_equal(as.character(d[-1]), substr(dnastr, 2, nchar(dnastr)))
+})
+
+## Porting RUnit tests
+test_that("alphabet finds the correct values", {
+	expect_equal(alphabet(DNAString(dnastr)), strsplit(dnastr, '')[[1]])
+	expect_equal(alphabet(RNAString(rnastr)), strsplit(rnastr, '')[[1]])
+	expect_equal(alphabet(AAString(aastr)), strsplit(aastr, '')[[1]])
+	expect_equal(alphabet(BString(bstr)), NULL)
+
+	expect_equal(alphabet(DNAString(), baseOnly=TRUE), DNA_BASES)
+	expect_equal(alphabet(RNAString(), baseOnly=TRUE), RNA_BASES)
+	expect_error(alphabet(DNAString(), baseOnly=1), "'baseOnly' must be TRUE or FALSE")
 })
