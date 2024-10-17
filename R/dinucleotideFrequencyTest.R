@@ -68,7 +68,8 @@ g.test <- function(x, y = NULL, correct="none",
     # are we doing a monte-carlo?
     # no monte carlo GOF?
     if (simulate.p.value){
-      METHOD <- paste("Log likelihood ratio (G-test) test of independence\n\t with simulated p-value based on", B, "replicates")
+      METHOD <- paste("Log likelihood ratio (G-test) test of independence", 
+                      "\n\t with simulated p-value based on", B, "replicates")
       tmp <- .C("gtestsim", as.integer(nrows), as.integer(ncols),
                 as.integer(sr), as.integer(sc), as.integer(n), as.integer(B),
                 as.double(E), integer(nrows * ncols), double(n+1),

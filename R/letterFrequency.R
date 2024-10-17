@@ -880,7 +880,7 @@ setMethod("consensusString", "matrix",
                      "(0, 1/sum(nchar(ambiguityMap) == 1)]")
             P <-
               vapply(strsplit(ambiguityMap[rownames(x)], ""),
-                     function(y) {z <- alphabet %in% y;z/sum(z)}, numeric(1L))
+                     function(y) {z <- alphabet %in% y;z/sum(z)}, numeric(length(alphabet)))
             x <- P %*% x
             consensusLetter <- function(col)
             {

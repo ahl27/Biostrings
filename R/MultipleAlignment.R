@@ -524,7 +524,7 @@ function(filepath, format)
     ## drop trailing spaces
     output <-  gsub("\\s+$","", output)
     ## remove the extra end line
-    output <- output[seq_len(length(output)-1)]
+    output <- output[-1*length(output)]
     ## finally attach the dims
     if(hasMask){
       ##Honestly not sure if I need a "W" here or what it means?
