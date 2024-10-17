@@ -284,10 +284,6 @@ saveXStringSet(x, objname, dirpath=".", save.dups=FALSE, verbose=TRUE)
   
   For \code{fastq.geometry}, a length two integer vector with the total number of FASTQ
   records and the common length of the reads (respectively).
-
-\alias{writeXStringSet}
-
-\alias{saveXStringSet}
 }
 
 \references{
