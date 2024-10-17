@@ -135,6 +135,10 @@
   }
 }
 
+\value{
+  See descriptions of each function in Details for return types.
+}
+
 \author{H. Pagès}
 
 \seealso{

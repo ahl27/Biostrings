@@ -62,6 +62,10 @@ pmatchPattern(pattern, subject, maxlength.out=1L)
   }
 }
 
+\value{
+  Currently a work in progress!
+}
+
 \seealso{
   \link{matchPattern},
   \link{XStringViews-class},

@@ -23,5 +23,10 @@
   AMINO_ACID_CODE[strsplit(as.character(aa), NULL)[[1]]]
 }
 
+\value{
+  A length-26 named character vector with names corresponding to amino acid 
+  symbols, and values corresponding to 3-letter amino acid representations.
+}
+
 \keyword{utilities}
 \keyword{data}
