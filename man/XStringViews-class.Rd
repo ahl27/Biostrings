@@ -124,8 +124,7 @@
       If \code{check.limits} is \code{FALSE} then "out of limit" views are
       trimmed with a warning.
     }
-    \item{\code{as.data.frame(x, row.names = NULL, optional = FALSE,
-	...)}}{
+    \item{\code{as.data.frame(x, row.names = NULL, optional = FALSE, ...)}}{
       Equivalent of \code{as.data.frame(as.character(x))}.
     }
     \item{\code{as.matrix(x, use.names=TRUE)}:}{

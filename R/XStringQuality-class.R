@@ -121,9 +121,9 @@ function(from, qualityClass)
        qualityClass)
 
 .XStringQualityToInteger <- function(from, qualityClass)
-	qualityConverter(BStringSet(from), qualityClass, "integer")
+    qualityConverter(BStringSet(from), qualityClass, "integer")
 .XStringQualityToNumeric <- function(from, qualityClass)
-	qualityConverter(BStringSet(from), qualityClass, "numeric")
+    qualityConverter(BStringSet(from), qualityClass, "numeric")
 
 .XStringQualityToIntegerMatrix <- function(x)
 {
