@@ -694,7 +694,7 @@ oligonucleotideTransitions <- function(x, left=1, right=1, as.prob=FALSE)
     expected_freqs_names <- paste(rep(ans_rownames, each=length(ans_colnames)),
                                   ans_colnames, sep="")
     if (!identical(names(freqs), expected_freqs_names))
-        stop("Biostrings internal error in oligonucleotideTransitions(): ",
+        stop("Biostrings internal issue in oligonucleotideTransitions(): ",
              "'freqs' has unexpected or missing names")
     ans <- matrix(freqs, ncol=length(ans_colnames), byrow=TRUE,
                   dimnames=list(ans_rownames, ans_colnames))

@@ -126,7 +126,7 @@ get_seqtype_conversion_lookup <- function(from_seqtype, to_seqtype)
         return(RNA_STRING_CODEC@dec_lkup)
     if (from_seqtype == "AA")
         return(AA_STRING_CODEC@dec_lkup)
-    stop("Biostrings internal error, please report") # should never happen
+    stop("Biostrings internal issue, please report") # should never happen
 }
 
 comparable_seqtypes <- function(seqtype1, seqtype2)
