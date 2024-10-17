@@ -68,7 +68,7 @@ gregexpr2 <- function(pattern, text)
         } else {
             subtexts <- substring(text[i], mi + 1, mi + 2*nP - 2)
             missing_matches <- gregexpr2(pattern, subtexts)
-            for (j in seq_len(mi)) {
+            for (j in seq_along(mi)) {
                 mj <- missing_matches[[j]]
                 if (length(mj) != 1 || mj != -1)
                     matches[[i]] <- c(matches[[i]], mi[j] + mj)

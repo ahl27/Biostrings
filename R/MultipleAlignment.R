@@ -442,14 +442,11 @@ function(filepath, format)
 .strChop <- function(x, chopsize=10, simplify = TRUE)
 {
   chunks <- breakInChunks(nchar(x), chunksize=chopsize)
+  retval <- lapply(seq_len(length(chunks)),
+                    function(i)
+                        substr(x, start=start(chunks)[i], stop=end(chunks)[i]))
   if(simplify==TRUE){
-    sapply(seq_len(length(chunks)),
-           function(i)
-           substr(x, start=start(chunks)[i], stop=end(chunks)[i]))
-  }else{
-    lapply(seq_len(length(chunks)),
-           function(i)
-           substr(x, start=start(chunks)[i], stop=end(chunks)[i]))
+    retval <- simplify2array(retval, higher=FALSE)
   }
 }
 
@@ -488,7 +485,7 @@ function(filepath, format)
     }
     ## Split up the output into lines, but grouped into a list object
     names <- names(ch)
-    ch <- sapply(ch, .strChop, chopsize=55, simplify=FALSE)
+    ch <- lapply(ch, .strChop, chopsize=55, simplify=FALSE)
     ## Again consider mask, split, name & cat on (if needed)
     if(hasMask){
       mskCh <- .strChop(mskCh, chopsize=55)

@@ -11,7 +11,7 @@ b <- BStringSet(bstr)
 ## testing functions from old testing files
 ### '.eltAddresses(x)' collects the addresses of the elements in 'x' (in
 ### practice 'x' will be a list of external pointers or environments).
-.eltAddresses <- function(x) sapply(x, XVector:::address)
+.eltAddresses <- function(x) vapply(x, XVector:::address, character(1L))
 
 ### 'x' and 'y' must be XVectorList vectors.
 .haveIdenticalPools <- function(x, y)
@@ -23,7 +23,7 @@ b <- BStringSet(bstr)
     pool_len <- length(x@pool)
     if (pool_len == 0L)
         return(integer(0))
-    sapply(seq_len(pool_len), function(i) length(x@pool[[i]]))
+    vapply(seq_len(pool_len), function(i) length(x@pool[[i]]), integer(1L))
 }
 
 test_that("seqtype correctly infers types", {

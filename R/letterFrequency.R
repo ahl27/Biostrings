@@ -416,8 +416,8 @@ safeLettersToInt <- function(x, letters.as.names=FALSE)
         colnames <- single_letters
     } else {
         colmap <- rep.int(seq_len(length(letters)), nc)
-        colnames <- sapply(strsplit(letters, NULL, fixed=TRUE),
-                           function(z) paste(z, collapse=OR))
+        colnames <- vapply(strsplit(letters, NULL, fixed=TRUE),
+                           function(z) paste(z, collapse=OR), character(1L))
     }
     if (is_sliding)
         .Call2("XString_letterFrequencyInSlidingView",
@@ -879,8 +879,8 @@ setMethod("consensusString", "matrix",
                 stop("'threshold' must be a numeric in ",
                      "(0, 1/sum(nchar(ambiguityMap) == 1)]")
             P <-
-              sapply(strsplit(ambiguityMap[rownames(x)], ""),
-                     function(y) {z <- alphabet %in% y;z/sum(z)})
+              vapply(strsplit(ambiguityMap[rownames(x)], ""),
+                     function(y) {z <- alphabet %in% y;z/sum(z)}, numeric(1L))
             x <- P %*% x
             consensusLetter <- function(col)
             {

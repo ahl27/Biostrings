@@ -77,7 +77,7 @@ normargFixed <- function(fixed, subject, argname="fixed")
             stop("'", argname, "' has NAs")
         fixed_names <- names(fixed)
         if (is.null(fixed_names)) {
-            if (!(length(fixed) %in% c(1L, 2L))
+            if (!(length(fixed) %in% c(1L, 2L)))
                 stop("when an unnamed logical vector, '", argname,
                      "' fixed must be of length 1 or 2")
             if (length(fixed) == 1)
@@ -454,8 +454,9 @@ hasLetterAt <- function(x, letter, at, fixed=TRUE)
         ans[at1 < 1 | at1 > width(x)] <- NA
         ans
     }
-    sapply(seq_len(length(letter)),
+    vapply(seq_along(letter),
            function(i)
-               .hasLetterAt1(x, subseq(letter, start=i, width=1L), at[i]))
+               .hasLetterAt1(x, subseq(letter, start=i, width=1L), at[i]),
+               logical(length(x)))
 }
 

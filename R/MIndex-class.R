@@ -68,7 +68,7 @@ setMethod("unlist", "MIndex",
         if (use.names) {
             ans_names <- names(x)
             if (!is.null(ans_names))
-                ans_names <- rep.int(ans_names, times=sapply(end_index, length))
+                ans_names <- rep.int(ans_names, times=vapply(end_index, length, integer(1L)))
         } else {
             ans_names <- NULL
         }

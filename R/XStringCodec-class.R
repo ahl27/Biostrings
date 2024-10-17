@@ -120,7 +120,7 @@ RNA_BASE_CODES <- c(A=1L, C=2L, G=4L, U=8L)
     if (any(baseIsU))
         names(baseCodes)[baseIsU] <- "T"
     code_list <- strsplit(IUPAC_CODE_MAP, "", fixed=TRUE)
-    codes <- sapply(code_list, function(x) sum(baseCodes[x]))
+    codes <- vapply(code_list, function(x) sum(baseCodes[x]), integer(1L))
     if (any(baseIsU))
         names(codes)[names(codes) == "T"] <- "U"
     codes
