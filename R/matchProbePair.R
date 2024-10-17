@@ -36,7 +36,7 @@ closestValues <- function(x, y)
         }
     }
     ans <- list()
-    for (k in 1:length(x0))
+    for (k in seq_along(x0))
         ans[[k]] <- c(x0[k], y0[k])
     ans
 }

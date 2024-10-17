@@ -527,7 +527,7 @@ function(filepath, format)
     ## drop trailing spaces
     output <-  gsub("\\s+$","", output)
     ## remove the extra end line
-    output <- output[1:length(output)-1]
+    output <- output[seq_len(length(output)-1)]
     ## finally attach the dims
     if(hasMask){
       ##Honestly not sure if I need a "W" here or what it means?
@@ -808,7 +808,7 @@ function (x, half_nrow=9L)
         for (i in seq_len(lx))
             .MultipleAlignment.show_frame_line(x, i, iW)
     } else {
-        for (i in 1:half_nrow)
+        for (i in seq_len(half_nrow))
             .MultipleAlignment.show_frame_line(x, i, iW)
         cat(format("...", width=iW, justify="right"), "...\n")
         for (i in (lx - half_nrow + 1L):lx)

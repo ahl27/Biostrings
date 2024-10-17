@@ -50,7 +50,7 @@ test_that("gregexpr2 correctly returns overlapping matches", {
 
 test_that("matchPattern, countPattern work as expected", {
 	## exact matching
-	for(algo in all_algos[c(1:4)]){
+	for(algo in all_algos[seq_len(4L)]){
 		.test_match_output(subject=sss, pattern="ATG", algo=algo,
 												exp_match=list(start=c(1,5,9), end=c(3,7,11), width=rep(3,3), stype="B"))
 		.test_match_output(subject=dna, pattern="ATG", algo=algo,
@@ -98,7 +98,7 @@ test_that("matchPattern, countPattern work as expected", {
 })
 
 test_that("vmatchPattern, vcountPattern work correctly", {
-		for(algo in all_algos[c(1:4)]){
+		for(algo in all_algos[seq_len(4L)]){
 			.test_vmatch_output(subject=dss, pattern="ATG", algo=algo,
 													exp_match=lapply(seq_len(2), \(x) list(start=c(1,5,9), end=c(3,7,11), width=rep(3,3))))
 			.test_vmatch_output(subject=rep(sss,2L), pattern="ATG", algo=algo,

@@ -967,7 +967,7 @@ setMethod("consensusString", "ANY",
     if (collapse)
       ans <- ans / sum(as.numeric(ans))
     else
-      ans <- ans / rep(nchar(x), each = prod(dim(ans)[1:2]))
+      ans <- ans / rep(nchar(x), each = prod(dim(ans)[seq_len(2L)]))
   }
   ans
 }
@@ -1019,7 +1019,7 @@ setMethod("twoWayAlphabetFrequency", c("XStringSet", "XStringSet"),
                 x, y, x.quality, y.quality, collapse, codes, baseOnly,
                 PACKAGE="Biostrings")
   if (as.prob) {
-    ans <- ans / rep(nchar(x), each = prod(dim(ans)[1:2]))
+    ans <- ans / rep(nchar(x), each = prod(dim(ans)[seq_len(2L)]))
   }
   ans
 }

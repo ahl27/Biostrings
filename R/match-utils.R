@@ -120,7 +120,7 @@ selectAlgo <- function(algo, pattern, max.mismatch, min.mismatch,
         return(list())
     if (any(width(x) != length(pattern)))
         warning("some views in 'x' have a width that differs from 'length(pattern)'")
-    lapply(1:length(x),
+    lapply(seq_along(x),
            function(i) .bsMismatch(pattern, subject(x), start(x)[i], fixed))
 }
 

@@ -77,7 +77,7 @@ normargFixed <- function(fixed, subject, argname="fixed")
             stop("'", argname, "' has NAs")
         fixed_names <- names(fixed)
         if (is.null(fixed_names)) {
-            if (!(length(fixed) %in% 1:2))
+            if (!(length(fixed) %in% c(1L, 2L))
                 stop("when an unnamed logical vector, '", argname,
                      "' fixed must be of length 1 or 2")
             if (length(fixed) == 1)

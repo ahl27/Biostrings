@@ -61,14 +61,14 @@ gregexpr2 <- function(pattern, text)
         stop("invalid pattern")
     matches <- gregexpr(pattern, text, fixed=TRUE)
     nP <- nchar(pattern)
-    for (i in 1:length(text)) {
+    for (i in seq_along(text)) {
         mi <- matches[[i]]
         if (length(mi) == 1 && mi == -1) {
             attr(matches[[i]], "match.length") <- NULL
         } else {
             subtexts <- substring(text[i], mi + 1, mi + 2*nP - 2)
             missing_matches <- gregexpr2(pattern, subtexts)
-            for (j in 1:length(mi)) {
+            for (j in seq_len(mi)) {
                 mj <- missing_matches[[j]]
                 if (length(mj) != 1 || mj != -1)
                     matches[[i]] <- c(matches[[i]], mi[j] + mj)
