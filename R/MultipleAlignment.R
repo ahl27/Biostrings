@@ -452,7 +452,7 @@ function(filepath, format)
 
 ## We just have to just insert line spaces
 .insertSpaces <- function(str){
-  str = .strChop(str)
+  str <- .strChop(str)
   paste(str, collapse=" ")
 }
 
