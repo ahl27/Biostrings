@@ -1,6 +1,3 @@
-library(Biostrings)
-library(testthat)
-
 dnastr <- paste(DNA_ALPHABET, collapse='')
 rnastr <- paste(RNA_ALPHABET, collapse='')
 aastr <- paste(AA_ALPHABET, collapse='')
@@ -21,7 +18,7 @@ test_that("seqtype correctly infers types", {
 })
 
 
-test_that("character conversion works properly", {
+test_that("character, vector conversion works properly", {
 	expect_equal(as.character(DNAString(dnastr)), dnastr)
 	expect_equal(as.character(RNAString(rnastr)), rnastr)
 	expect_equal(as.character(AAString(aastr)), aastr)
@@ -49,10 +46,10 @@ test_that("'letter' correctly extracts elements", {
 	expect_equal(letter(bstr, seq(nchar(bstr), 1)), rawToChar(rev(charToRaw(bstr))))
 
 	## TODO: Better error messages
-	expect_error(letter(DNAString(""), 10), "> length\\(x\\)")
-	expect_error(letter(RNAString(""), 10), "> length\\(x\\)")
-	expect_error(letter(AAString(""), 10), "> length\\(x\\)")
-	expect_error(letter(BString(""), 10), "> length\\(x\\)")
+	expect_error(letter(DNAString(""), 10), "out of bounds")
+	expect_error(letter(RNAString(""), 10), "out of bounds")
+	expect_error(letter(AAString(""), 10), "out of bounds")
+	expect_error(letter(BString(""), 10), "out of bounds")
 	expect_error(letter("", 10), "out of bounds")
 })
 
@@ -112,29 +109,29 @@ test_that("as.vector methods work correctly", {
 })
 
 test_that("equality methods work as advertised", {
-	expect_equal(DNAString(dnastr) == DNAString(dnastr), TRUE)
-	expect_equal(RNAString(rnastr) == RNAString(rnastr), TRUE)
-	expect_equal(AAString(aastr) == AAString(aastr), TRUE)
-	expect_equal(BString(bstr) == BString(bstr), TRUE)
+	expect_true(DNAString(dnastr) == DNAString(dnastr))
+	expect_true(RNAString(rnastr) == RNAString(rnastr))
+	expect_true(AAString(aastr) == AAString(aastr))
+	expect_true(BString(bstr) == BString(bstr))
 
-	expect_equal(DNAString(dnastr) == DNAString(substr(dnastr, 1, 7)), FALSE)
-	expect_equal(RNAString(rnastr) == RNAString(substr(rnastr, 1, 7)), FALSE)
-	expect_equal(AAString(aastr) == AAString(substr(aastr, 1, 7)), FALSE)
-	expect_equal(BString(bstr) == BString(substr(bstr, 1, 7)), FALSE)
+	expect_false(DNAString(dnastr) == DNAString(substr(dnastr, 1, 7)))
+	expect_false(RNAString(rnastr) == RNAString(substr(rnastr, 1, 7)))
+	expect_false(AAString(aastr) == AAString(substr(aastr, 1, 7)))
+	expect_false(BString(bstr) == BString(substr(bstr, 1, 7)))
 
-	expect_equal(DNAString(dnastr) != DNAString(substr(dnastr, 1, 7)), TRUE)
-	expect_equal(RNAString(rnastr) != RNAString(substr(rnastr, 1, 7)), TRUE)
-	expect_equal(AAString(aastr) != AAString(substr(aastr, 1, 7)), TRUE)
-	expect_equal(BString(bstr) != BString(substr(bstr, 1, 7)), TRUE)
+	expect_true(DNAString(dnastr) != DNAString(substr(dnastr, 1, 7)))
+	expect_true(RNAString(rnastr) != RNAString(substr(rnastr, 1, 7)))
+	expect_true(AAString(aastr) != AAString(substr(aastr, 1, 7)))
+	expect_true(BString(bstr) != BString(substr(bstr, 1, 7)))
 
 
 	## DNA <-> RNA comparison
-	expect_equal(DNAString(dnastr) == RNAString(rnastr), TRUE)
+	expect_true(DNAString(dnastr) == RNAString(rnastr))
 
 	## other B comparisons
-	expect_equal(AAString(aastr) == BString(aastr), TRUE)
-	expect_equal(AAString(aastr) != BString(bstr), TRUE)
-	expect_equal(bstr == BString(bstr), TRUE)
+	expect_true(AAString(aastr) == BString(aastr))
+	expect_true(AAString(aastr) != BString(bstr))
+	expect_true(bstr == BString(bstr))
 
 	## invalid comparisons
 	expect_error(DNAString(dnastr) == AAString(aastr), 'comparison between a "DNAString" instance and a "AAString" instance is not supported')
@@ -177,4 +174,71 @@ test_that("substr, substring methods work correctly", {
 	expect_error(substring(r, 10, 5), "Invalid sequence coordinates")
 	expect_error(substring(a, 10, 5), "Invalid sequence coordinates")
 	expect_error(substring(b, 10, 5), "Invalid sequence coordinates")
+
+	# `[` dispatch
+	expect_equal(as.character(d[1:10]), substr(dnastr, 1, 10))
+	expect_equal(as.character(d[-1]), substr(dnastr, 2, nchar(dnastr)))
+})
+
+test_that("reverse, complement, reverseComplement work correctly", {
+	## reverse tests
+	.revString <- function(s) paste(strsplit(s, '')[[1]][seq(nchar(s), 1L)], collapse='')
+	dna <- DNAString(dnastr)
+	rna <- RNAString(rnastr)
+	aaa <- AAString(aastr)
+	bbb <- BString(bstr)
+	d_comp <- "TGCAKYWSRMBDHVN-+."
+	r_comp <- "UGCAKYWSRMBDHVN-+."
+
+	## example Views on strings
+	d_v <- Views(dna, start=rep(1L,3L), end=rep(nchar(dnastr),3L))
+	mdna <- dna
+	mrna <- rna
+	m1 <- Mask(nchar(dnastr), start=c(2,7), end=c(3,10))
+	masks(mdna) <- masks(mrna) <- m1
+	md_comp <- strsplit(d_comp, '')[[1]]
+	mr_comp <- strsplit(r_comp, '')[[1]]
+	md_comp[c(2:3,7:10)] <- mr_comp[c(2:3,7:10)] <- "#"
+	md_comp <- paste(md_comp, collapse='')
+	mr_comp <- paste(mr_comp, collapse='')
+
+
+	## reverse method
+	expect_equal(reverse(dnastr), .revString(dnastr))
+	expect_equal(as.character(reverse(dna)), .revString(dnastr))
+	expect_equal(as.character(reverse(rna)), .revString(rnastr))
+	expect_equal(as.character(reverse(aaa)), .revString(aastr))
+	expect_equal(as.character(reverse(bbb)), .revString(bstr))
+	expect_equal(as.character(reverse(mdna)), .revString(as.character(mdna)))
+	expect_equal(as.character(reverse(mrna)), .revString(as.character(mrna)))
+
+	## complement method
+	expect_equal(as.character(complement(dna)), d_comp)
+	expect_equal(as.character(complement(rna)), r_comp)
+	expect_error(complement(AAString()), "unable to find an inherited method")
+	expect_error(complement(BString()), "unable to find an inherited method")
+	expect_equal(as.character(complement(d_v)), rep(d_comp, 3L))
+	expect_equal(as.character(complement(mdna)), md_comp)
+	expect_equal(as.character(complement(mrna)), mr_comp)
+
+	## reverseComplement method
+	expect_equal(as.character(reverseComplement(dna)), .revString(d_comp))
+	expect_equal(as.character(reverseComplement(rna)), .revString(r_comp))
+	expect_error(reverseComplement(AAString()), "unable to find an inherited method")
+	expect_error(reverseComplement(BString()), "unable to find an inherited method")
+	expect_equal(as.character(reverseComplement(d_v)), rep(.revString(d_comp), 3L))
+	expect_equal(as.character(reverseComplement(mdna)), .revString(md_comp))
+	expect_equal(as.character(reverseComplement(mrna)), .revString(mr_comp))
+})
+
+## Porting RUnit tests
+test_that("alphabet finds the correct values", {
+	expect_equal(alphabet(DNAString(dnastr)), strsplit(dnastr, '')[[1]])
+	expect_equal(alphabet(RNAString(rnastr)), strsplit(rnastr, '')[[1]])
+	expect_equal(alphabet(AAString(aastr)), strsplit(aastr, '')[[1]])
+	expect_equal(alphabet(BString(bstr)), NULL)
+
+	expect_equal(alphabet(DNAString(), baseOnly=TRUE), DNA_BASES)
+	expect_equal(alphabet(RNAString(), baseOnly=TRUE), RNA_BASES)
+	expect_error(alphabet(DNAString(), baseOnly=1), "'baseOnly' must be TRUE or FALSE")
 })
