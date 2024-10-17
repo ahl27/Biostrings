@@ -499,7 +499,7 @@ setAs("ANY", "XStringSet",
             .XStringSet.show_frame_line(x, i, iW, widthW)
     } else {
         if (head_nrow > 0)
-            for (i in 1:head_nrow)
+            for (i in seq_len(head_nrow))
                 .XStringSet.show_frame_line(x, i, iW, widthW)
         cat(format("...", width=iW, justify="right"),
             format("...", width=widthW, justify="right"),

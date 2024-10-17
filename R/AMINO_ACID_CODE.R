@@ -41,7 +41,7 @@ AMINO_ACID_CODE <- c(
 ### Amino Acid alphabet ("*" is a translation stop)
 AA_ALPHABET <- c(.AMINO_ACID_CODE_names, "*", "-", "+", ".")
 
-AA_STANDARD <- .AMINO_ACID_CODE_names[1:20]
+AA_STANDARD <- .AMINO_ACID_CODE_names[seq_len(20L)]
 
-AA_PROTEINOGENIC <- .AMINO_ACID_CODE_names[1:22]
+AA_PROTEINOGENIC <- .AMINO_ACID_CODE_names[seq_len(22L)]
 

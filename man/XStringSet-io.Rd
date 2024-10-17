@@ -273,6 +273,19 @@ saveXStringSet(x, objname, dirpath=".", save.dups=FALSE, verbose=TRUE)
   \code{save}. Most of the times this leads to a much reduced size on disk.
 }
 
+\value{
+  For \code{readXStringSet} functions, an object of the corresponding type is returned.
+
+  For \code{fasta.seqlengths}, and \code{fastq.seqlengths} an integer vector with one 
+  element per FASTA/Q record in the input files. 
+  
+  For \code{fasta.index}, a \code{data.frame} object with one row per FASTA entry 
+  (see Details for the contents of each column).
+  
+  For \code{fastq.geometry}, a length two integer vector with the total number of FASTQ
+  records and the common length of the reads (respectively).
+}
+
 \references{
   \url{http://en.wikipedia.org/wiki/FASTA_format}
 }

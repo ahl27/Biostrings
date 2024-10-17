@@ -292,14 +292,46 @@ test_that("nucleotideFrequency() methods work properly", {
                  "must contain sequences of type DNA or RNA"))
 })
 
-test_that("consensusMatrix/String() work properly on zero-length input", {
-    ## verify previous functionality
-    exp_output <- matrix(0L, nrow=5, ncol=4)
-    diag(exp_output) <- 1L
-    rownames(exp_output) <- c(DNA_BASES, "other")
-    expect_identical(consensusMatrix(DNAStringSet("ACGT"), baseOnly=TRUE),
-                     exp_output)
-    expect_identical(consensusString(DNAStringSet(c("ATGC", "ATTC"))), "ATKC")
+test_that("consensusMatrix, consensusString function properly", {
+	set.seed(142L)
+	n_seq <- 10L
+	n_base <- 20L
+	seqs <- vapply(seq_len(n_seq), \(x) sample(DNA_ALPHABET, n_base, replace=TRUE), character(n_base))
+	dnas <- DNAStringSet(apply(seqs, 2L, paste, collapse=''))
+	exp_output <- matrix(0L, nrow=length(DNA_ALPHABET), ncol=n_base)
+	rownames(exp_output) <- DNA_ALPHABET
+	for(i in seq_len(n_base)){
+		tab <- table(seqs[i,])
+		exp_output[names(tab),i] <- tab
+	}
+	expect_equal(consensusMatrix(dnas), exp_output)
+	expect_equal(consensusMatrix(dnas, as.prob=TRUE), exp_output / n_seq)
+
+	exp_output_baseonly <- rbind(exp_output[DNA_BASES,],
+		other=colSums(exp_output[!rownames(exp_output) %in% DNA_BASES,]))
+	expect_equal(consensusMatrix(dnas, baseOnly=TRUE), exp_output_baseonly)
+	expect_equal(consensusMatrix(dnas, baseOnly=TRUE, as.prob=TRUE), exp_output_baseonly / n_seq)
+
+	dnas2 <- DNAStringSet(c("AAAA", "AATT", "GGGG", "GGCC", "AACC"))
+	expect_equal(consensusString(dnas2[1:2]), "AAWW")
+	expect_equal(consensusString(dnas2[3:4]), "GGSS")
+	expect_equal(consensusString(dnas2[1:2], ambiguityMap="N"), "AANN")
+	expect_equal(consensusString(dnas2, ambiguityMap=c(B="AG", A="A", T="T", G="G", C="C")), "BBCC")
+	expect_equal(consensusString(dnas2, ambiguityMap="N"), "NNCC")
+	expect_equal(consensusString(dnas2, ambiguityMap="N", threshold=0.5), "AANN")
+	expect_equal(consensusString(dnas2, ambiguityMap="N", threshold=0.75), "NNNN")
+
+	m <- consensusMatrix(as.matrix(dnas2))
+	expect_equal(consensusString(m), "AA??")
+})
+
+test_that("zero-length input doesn't cause errors in consensusMatrix, consensusString", {
+	## verify previous functionality
+	exp_output <- matrix(0L, nrow=5, ncol=4)
+	diag(exp_output) <- 1L
+	rownames(exp_output) <- c(DNA_BASES, "other")
+	expect_identical(consensusMatrix(DNAStringSet("ACGT"), baseOnly=TRUE), exp_output)
+	expect_identical(consensusString(DNAStringSet(c("ATGC", "ATTC"))), "ATKC")
 
     ## DNA_ALPHABET is a subset of AA_ALPHABET
     all_letters <- do.call(union, list(AA_ALPHABET, RNA_ALPHABET))

@@ -366,8 +366,8 @@ XStringViews.equal <- function(x, y)
         if (j < ly) j <- j + 1 else j <- 1
     }
     if (j != 1)
-        warning(paste("longer object length",
-                      "is not a multiple of shorter object length"))
+        warning("longer object length",
+                      " is not a multiple of shorter object length")
     ans
 }
 

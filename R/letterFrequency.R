@@ -416,8 +416,8 @@ safeLettersToInt <- function(x, letters.as.names=FALSE)
         colnames <- single_letters
     } else {
         colmap <- rep.int(seq_len(length(letters)), nc)
-        colnames <- sapply(strsplit(letters, NULL, fixed=TRUE),
-                           function(z) paste(z, collapse=OR))
+        colnames <- vapply(strsplit(letters, NULL, fixed=TRUE),
+                           function(z) paste(z, collapse=OR), character(1L))
     }
     if (is_sliding)
         .Call2("XString_letterFrequencyInSlidingView",
@@ -694,7 +694,7 @@ oligonucleotideTransitions <- function(x, left=1, right=1, as.prob=FALSE)
     expected_freqs_names <- paste(rep(ans_rownames, each=length(ans_colnames)),
                                   ans_colnames, sep="")
     if (!identical(names(freqs), expected_freqs_names))
-        stop("Biostrings internal error in oligonucleotideTransitions(): ",
+        stop("Biostrings internal issue in oligonucleotideTransitions(): ",
              "'freqs' has unexpected or missing names")
     ans <- matrix(freqs, ncol=length(ans_colnames), byrow=TRUE,
                   dimnames=list(ans_rownames, ans_colnames))
@@ -882,8 +882,8 @@ setMethod("consensusString", "matrix",
                 stop("'threshold' must be a numeric in ",
                      "(0, 1/sum(nchar(ambiguityMap) == 1)]")
             P <-
-              sapply(strsplit(ambiguityMap[rownames(x)], ""),
-                     function(y) {z <- alphabet %in% y;z/sum(z)})
+              vapply(strsplit(ambiguityMap[rownames(x)], ""),
+                     function(y) {z <- alphabet %in% y;z/sum(z)}, numeric(length(alphabet)))
             x <- P %*% x
             consensusLetter <- function(col)
             {
@@ -970,7 +970,7 @@ setMethod("consensusString", "ANY",
     if (collapse)
       ans <- ans / sum(as.numeric(ans))
     else
-      ans <- ans / rep(nchar(x), each = prod(dim(ans)[1:2]))
+      ans <- ans / rep(nchar(x), each = prod(dim(ans)[seq_len(2L)]))
   }
   ans
 }
@@ -1022,7 +1022,7 @@ setMethod("twoWayAlphabetFrequency", c("XStringSet", "XStringSet"),
                 x, y, x.quality, y.quality, collapse, codes, baseOnly,
                 PACKAGE="Biostrings")
   if (as.prob) {
-    ans <- ans / rep(nchar(x), each = prod(dim(ans)[1:2]))
+    ans <- ans / rep(nchar(x), each = prod(dim(ans)[seq_len(2L)]))
   }
   ans
 }

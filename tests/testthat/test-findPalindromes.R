@@ -71,7 +71,7 @@ test_that("findPalindromes() works on nucleotide sequences", {
   for (class in c("DNAString", "RNAString")) {
       x <- as(x3, class)
       current <- findPalindromes(x, min.armlength=2)
-      target <- IRanges(1:2, 5)
+      target <- IRanges(c(1L,2L), 5)
       expect_identical(target, ranges(current))
       current <- findPalindromes(x, min.armlength=2, max.looplength=0)
       expect_identical(target[2], ranges(current))

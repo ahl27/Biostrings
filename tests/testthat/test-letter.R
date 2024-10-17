@@ -16,12 +16,12 @@ test_that("letter generic works properly for all classes", {
     maskdna <- dna
     masks(maskdna) <- m
 
-    ## happy path testing
-    test_cases <- list(1.0, 1:3, 1:3*2L, integer(0L))
-    for (i in seq_along(test_cases)) {
-        ## character
-        expect_equal(letter(s, test_cases[[i]]),
-                     paste(letters[test_cases[[i]]], collapse=""))
+	## happy path testing
+	test_cases <- list(1.0, seq_len(3L), seq_len(3L)*2L, integer(0L))
+	for(i in seq_along(test_cases)){
+		## character
+		expect_equal(letter(s, test_cases[[i]]),
+                    paste(letters[test_cases[[i]]], collapse=''))
 
         ## XString
         expect_equal(letter(dna, test_cases[[i]]),

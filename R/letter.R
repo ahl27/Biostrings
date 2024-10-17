@@ -28,9 +28,10 @@ setMethod("letter", "character",
             tmp <- lapply(i, function(i1) substr(noNA_x, i1, i1))
             x[!is.na(x)] <- do.call(paste, c(tmp, sep=""))
         } else {
-            x[!is.na(x)] <- sapply(
+            x[!is.na(x)] <- vapply(
                                 noNA_x,
                                 function(x1) paste(substring(x1, i, i), collapse=""),
+                                character(1L),
                                 USE.NAMES=FALSE
                             )
         }
@@ -66,7 +67,7 @@ setMethod("letter", "XStringViews",
         imax <- min(width(x))
         if (!all(i >= 1L) || !all(i <= imax))
             stop("subscript out of bounds")
-        sapply(x, letter, i)
+        vapply(x, letter, character(1L), i)
     }
 )
 

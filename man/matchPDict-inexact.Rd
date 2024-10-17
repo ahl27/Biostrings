@@ -63,6 +63,10 @@
   It works whether or not a Trusted Band has been defined on \code{pdict}.
 }
 
+\value{
+  See \code{\link{matchPDict}} for return types.
+}
+
 \author{H. Pagès}
 
 \references{

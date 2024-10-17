@@ -68,14 +68,15 @@ g.test <- function(x, y = NULL, correct="none",
     # are we doing a monte-carlo?
     # no monte carlo GOF?
     if (simulate.p.value){
-      METHOD <- paste("Log likelihood ratio (G-test) test of independence\n\t with simulated p-value based on", B, "replicates")
+      METHOD <- paste("Log likelihood ratio (G-test) test of independence", 
+                      "\n\t with simulated p-value based on", B, "replicates")
       tmp <- .C("gtestsim", as.integer(nrows), as.integer(ncols),
                 as.integer(sr), as.integer(sc), as.integer(n), as.integer(B),
                 as.double(E), integer(nrows * ncols), double(n+1),
                 integer(ncols), results=double(B), PACKAGE= "Biostrings")
       g <- 0
-      for (i in 1:nrows){
-        for (j in 1:ncols){
+      for (i in seq_len(nrows)){
+        for (j in seq_len(ncols)){
           if (x[i,j] != 0) g <- g + x[i,j] * log(x[i,j]/E[i,j])
         }
       }
@@ -87,16 +88,16 @@ g.test <- function(x, y = NULL, correct="none",
       # no monte-carlo
       # calculate G
       g <- 0
-      for (i in 1:nrows){
-        for (j in 1:ncols){
+      for (i in seq_len(nrows)){
+        for (j in seq_len(ncols)){
           if (x[i,j] != 0) g <- g + x[i,j] * log(x[i,j]/E[i,j])
         }
       }
       q <- 1
       if (correct=="williams"){ # Do Williams' correction
         row.tot <- col.tot <- 0    
-        for (i in 1:nrows){ row.tot <- row.tot + 1/(sum(x[i,])) }
-        for (j in 1:ncols){ col.tot <- col.tot + 1/(sum(x[,j])) }
+        for (i in seq_len(nrows)){ row.tot <- row.tot + 1/(sum(x[i,])) }
+        for (j in seq_len(ncols)){ col.tot <- col.tot + 1/(sum(x[,j])) }
         q <- 1+ ((n*row.tot-1)*(n*col.tot-1))/(6*n*(ncols-1)*(nrows-1))
       }
       STATISTIC <- G <- 2 * g / q
@@ -133,7 +134,7 @@ g.test <- function(x, y = NULL, correct="none",
     }
     names(E) <- names(x)
     g <- 0
-    for (i in 1:length(x)){
+    for (i in seq_along(x)){
       if (x[i] != 0) g <- g + x[i] * log(x[i]/E[i])
     }
     q <- 1

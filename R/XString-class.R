@@ -473,7 +473,7 @@ setMethod("updateObject", "XString",
         xdata <- object@xdata
         ans_shared <- new("SharedRaw")
         ans_shared@xp <- xdata@xp
-        ans_shared@.link_to_cached_object=xdata@.link_to_cached_object
+        ans_shared@.link_to_cached_object <- xdata@.link_to_cached_object
         new2(class(object),
              shared=ans_shared,
              offset=object@offset,

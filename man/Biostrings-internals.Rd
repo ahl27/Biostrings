@@ -43,6 +43,10 @@
   be used directly.
 }
 
+\value{
+  None.
+}
+
 \author{H. Pagès}
 
 \keyword{internal}

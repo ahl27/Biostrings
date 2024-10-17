@@ -148,14 +148,15 @@ test_that("MIndex functionality works", {
 ## Helper functions ported from old tests
 randomDNASequences <- function(n, w)
 {
-    alphabet <- DNA_BASES
-    w <- rep(w, length=n)
-    sequences <- sapply(seq(1, n, length=n),
-                        function(x) {
-                            s <- sample(alphabet, w[x], replace=TRUE)
-                            paste(s, collapse="")
-                        })
-    Biostrings::DNAStringSet(sequences)
+  alphabet <- DNA_BASES
+  w <- rep(w, length=n)
+  sequences <- vapply(seq(1, n, length=n),
+                      function(x) {
+                        s <- sample(alphabet, w[x], replace=TRUE)
+                        s <- paste(s, collapse="")
+                        return(s)
+                      }, character(1L))
+  return(Biostrings::DNAStringSet(sequences))
 }
 
 msubseq <- function(x, ir)

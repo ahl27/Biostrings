@@ -24,7 +24,7 @@
         stop("xscat() arguments must be character vectors (with no NAs) ",
              "or XString/XStringSet/XStringViews objects")
     }
-    arg_cards <- sapply(list(...), get_arg_cardinality)
+    arg_cards <- vapply(list(...), get_arg_cardinality, integer(1L))
     if (all(arg_cards == 0L))
         return(0L)
     if (any(arg_cards == 0L))
@@ -41,7 +41,7 @@
     {
         if (is.character(arg)) "B" else seqtype(arg)
     }
-    arg_seqtypes <- unique(sapply(list(...), get_arg_seqtype))
+    arg_seqtypes <- unique(vapply(list(...), get_arg_seqtype, character(1L)))
     ans_seqtype <- setdiff(arg_seqtypes, "B")
     if (length(ans_seqtype) >= 2L)
         stop("xscat() cannot mix ", ans_seqtype[1L],

@@ -11,6 +11,10 @@ Annotation based on data provided by Yeast Genome project.
 Source data built:Yeast Genome data are built at various time intervals. Sources used were downloaded Fri Nov 21 14:00:47 2003
 Package built: Fri Nov 21 14:00:47 2003
 }
+
+\value{
+    A single character string containing DNA sequence of yeast chromosome number 1.
+}
 \references{
 \url{http://www.yeastgenome.org/DownloadContents.shtml}
 }

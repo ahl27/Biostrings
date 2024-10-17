@@ -442,20 +442,17 @@ function(filepath, format)
 .strChop <- function(x, chopsize=10, simplify = TRUE)
 {
   chunks <- breakInChunks(nchar(x), chunksize=chopsize)
+  retval <- lapply(seq_len(length(chunks)),
+                    function(i)
+                        substr(x, start=start(chunks)[i], stop=end(chunks)[i]))
   if(simplify==TRUE){
-    sapply(seq_len(length(chunks)),
-           function(i)
-           substr(x, start=start(chunks)[i], stop=end(chunks)[i]))
-  }else{
-    lapply(seq_len(length(chunks)),
-           function(i)
-           substr(x, start=start(chunks)[i], stop=end(chunks)[i]))
+    retval <- simplify2array(retval, higher=FALSE)
   }
 }
 
 ## We just have to just insert line spaces
 .insertSpaces <- function(str){
-  str = .strChop(str)
+  str <- .strChop(str)
   paste(str, collapse=" ")
 }
 
@@ -488,7 +485,7 @@ function(filepath, format)
     }
     ## Split up the output into lines, but grouped into a list object
     names <- names(ch)
-    ch <- sapply(ch, .strChop, chopsize=55, simplify=FALSE)
+    ch <- lapply(ch, .strChop, chopsize=55, simplify=FALSE)
     ## Again consider mask, split, name & cat on (if needed)
     if(hasMask){
       mskCh <- .strChop(mskCh, chopsize=55)
@@ -527,7 +524,7 @@ function(filepath, format)
     ## drop trailing spaces
     output <-  gsub("\\s+$","", output)
     ## remove the extra end line
-    output <- output[1:length(output)-1]
+    output <- output[-1*length(output)]
     ## finally attach the dims
     if(hasMask){
       ##Honestly not sure if I need a "W" here or what it means?
@@ -808,7 +805,7 @@ function (x, half_nrow=9L)
         for (i in seq_len(lx))
             .MultipleAlignment.show_frame_line(x, i, iW)
     } else {
-        for (i in 1:half_nrow)
+        for (i in seq_len(half_nrow))
             .MultipleAlignment.show_frame_line(x, i, iW)
         cat(format("...", width=iW, justify="right"), "...\n")
         for (i in (lx - half_nrow + 1L):lx)

@@ -11,6 +11,10 @@
   A \code{DNAStringSet} containing 71 known binding sequences for HNF4alpha.
 }
 
+\value{
+  See Details.
+}
+
 \references{
   Ellrott, K., Yang, C., Sladek, F.M., Jiang, T. (2002)
   "Identifying transcription factor binding sites through Markov chain optimations",

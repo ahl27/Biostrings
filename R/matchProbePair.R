@@ -36,7 +36,7 @@ closestValues <- function(x, y)
         }
     }
     ans <- list()
-    for (k in 1:length(x0))
+    for (k in seq_along(x0))
         ans[[k]] <- c(x0[k], y0[k])
     ans
 }
@@ -84,17 +84,17 @@ setMethod("matchProbePair", "DNAString",
              logfile=NULL, verbose=FALSE, ...)
     {
         ## This won't copy the data if Fprobe and Rprobe are already DNAString objects
-        F <- DNAString(Fprobe)
-        R <- DNAString(Rprobe)
+        F_ <- DNAString(Fprobe)
+        R_ <- DNAString(Rprobe)
 
         ## F and R hits on the + strand
-        Fp_hits <- start(matchPattern(F, subject, algorithm=algorithm, ...))
-        Rp_hits <- start(matchPattern(R, subject, algorithm=algorithm, ...))
+        Fp_hits <- start(matchPattern(F_, subject, algorithm=algorithm, ...))
+        Rp_hits <- start(matchPattern(R_, subject, algorithm=algorithm, ...))
 
         ## F and R hits on the - strand
-        Fm_hits <- end(matchPattern(reverseComplement(F),
+        Fm_hits <- end(matchPattern(reverseComplement(F_),
                                     subject, algorithm=algorithm, ...))
-        Rm_hits <- end(matchPattern(reverseComplement(R),
+        Rm_hits <- end(matchPattern(reverseComplement(R_),
                                     subject, algorithm=algorithm, ...))
 
         if (verbose) {
