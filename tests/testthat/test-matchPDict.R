@@ -150,7 +150,7 @@ randomDNASequences <- function(n, w)
 {
   alphabet <- DNA_BASES
   w <- rep(w, length=n)
-  sequences <- vapply(seq(1, n, length=n),
+  sequences <- vapply(seq_len(n),
                       function(x) {
                         s <- sample(alphabet, w[x], replace=TRUE)
                         s <- paste(s, collapse="")
