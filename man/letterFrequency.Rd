@@ -23,6 +23,8 @@
 \alias{hasOnlyBaseLetters,DNAStringSet-method}
 \alias{hasOnlyBaseLetters,RNAString-method}
 \alias{hasOnlyBaseLetters,RNAStringSet-method}
+\alias{hasOnlyBaseLetters,AAString-method}
+\alias{hasOnlyBaseLetters,AAStringSet-method}
 \alias{hasOnlyBaseLetters,XStringViews-method}
 \alias{hasOnlyBaseLetters,MaskedXString-method}
 

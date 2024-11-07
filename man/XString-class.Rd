@@ -54,6 +54,7 @@
 
 % "updateObject" method:
 \alias{updateObject,XString-method}
+\alias{updateObject,AAString-method}
 
 
 \title{BString objects}
@@ -104,7 +105,7 @@
   \describe{
     \item{\code{alphabet(x)}:}{
       \code{NULL} for a \code{BString} object.
-      See the corresponding man pages when \code{x} is a 
+      See the corresponding man pages when \code{x} is a
       \link{DNAString}, \link{RNAString} or \link{AAString} object.
     }
     \item{\code{length(x)}:}{ or \code{nchar(x)}:

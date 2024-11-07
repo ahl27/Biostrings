@@ -26,6 +26,7 @@
 % Methods:
 
 \alias{relistToClass,XStringSet-method}
+\alias{relistToClass,XString-method}
 
 \alias{seqtype,XStringSetList-method}
 \alias{seqtype<-,XStringSetList-method}
@@ -45,6 +46,8 @@
 \alias{coerce,List,AAStringSetList-method}
 
 \alias{nchar,XStringSetList-method}
+
+\alias{unstrsplit,XStringSetList-method}
 
 
 \title{XStringSetList objects}

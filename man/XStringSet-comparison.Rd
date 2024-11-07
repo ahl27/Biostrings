@@ -4,11 +4,17 @@
 
 \alias{pcompare,XStringSet,XStringSet-method}
 \alias{pcompare,XStringSet,ANY-method}
+\alias{pcompare,Vector,XStringSet-method}
+\alias{pcompare,vector,XStringSet-method}
+\alias{pcompare,XStringSet,Vector-method}
+\alias{pcompare,XStringSet,vector-method}
 \alias{pcompare,ANY,XStringSet-method}
 
 \alias{match,XStringSet,XStringSet-method}
-\alias{match,XStringSet,ANY-method}
-\alias{match,ANY,XStringSet-method}
+\alias{match,vector,XStringSet-method}
+\alias{match,Vector,XStringSet-method}
+\alias{match,XStringSet,Vector-method}
+\alias{match,XStringSet,vector-method}
 
 \alias{is.na,XStringSet-method}
 \alias{anyNA,XStringSet-method}

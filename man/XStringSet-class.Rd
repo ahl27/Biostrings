@@ -49,7 +49,11 @@
 \alias{toString,XStringSet-method}
 \alias{as.matrix,XStringSet-method}
 
+\alias{strsplit,XStringSet-method}
+\alias{unstrsplit,XStringSet-method}
+
 \alias{updateObject,XStringSet-method}
+\alias{updateObject,AAStringSet-method}
 
 
 \title{XStringSet objects}
@@ -77,7 +81,6 @@ AAStringSet(x=character(), start=NA, end=NA, width=NA, use.names=TRUE)
 ## Accessor-like methods:
 \S4method{width}{character}(x)
 \S4method{nchar}{XStringSet}(x, type="chars", allowNA=FALSE)
-
 ## ... and more (see below)
 }
 
@@ -207,6 +210,12 @@ AAStringSet(x=character(), start=NA, end=NA, width=NA, use.names=TRUE)
       method for \link[XVector]{XVector} objects.
       See \code{?`\link[XVector]{subseq<-}`} for the details.
     }
+    \item{\code{strsplit(x, split, ...)}:}{
+      Like \code{strsplit} for characters, this function splits
+      each XString in an XStringSet by the value of \code{split},
+      returning an XStringSetList with one entry for each XString
+      in the original XStringSet. See Examples for a demonstration.
+    }
   }
 }
 
@@ -283,6 +292,12 @@ AAStringSet(x=character(), start=NA, end=NA, width=NA, use.names=TRUE)
       object length is less than the sum of the options, the full object
       is displayed. These options affect GRanges, GAlignments, IRanges,
       and XStringSet objects.
+    }
+    \item{\code{unstrsplit(x)}:}{
+      Provided for consistency with
+      \code{\link[unstrsplit,XStringSetList-method]{unstrsplit}}
+      for XStringSetList objects. When called on an XStringSet,
+      does nothing and returns \code{x}.
     }
   }
 }
@@ -448,7 +463,21 @@ probes <- DNAStringSet(drosophila2probe)
 unlist(probes)
 
 ## ---------------------------------------------------------------------
-## G. COMPACTING AN XStringSet OBJECT
+## H. STRSPLIT ON AN XStringSet OBJECT
+## ---------------------------------------------------------------------
+dnas <- DNAStringSet(c("ATGCATGC", "AAACAAAA"))
+dna_split <- strsplit(dnas, "C")
+## ATGCATGC is split into ATG ATG
+## AAACAAAA is split into AAA AAAAS
+
+## we can undo the operation with unstrsplit
+unstrsplit(dna_split, "C")
+
+## note that unstrsplit on an XStringSet is a no-op
+unstrsplit(dnas, "C")
+
+## ---------------------------------------------------------------------
+## H. COMPACTING AN XStringSet OBJECT
 ## ---------------------------------------------------------------------
 ## As a particular type of XVectorList objects, XStringSet objects can
 ## optionally be compacted. Compacting is done typically before
