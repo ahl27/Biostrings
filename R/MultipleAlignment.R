@@ -461,7 +461,7 @@ function(filepath, format)
   if(inherits(x, "MultipleAlignment")){
     ## 1st, we need to capture the colmask as a vector that can be included
     msk <- colmask(x)
-    dims <- dim(x)    
+    dims <- dim(x)
     if(invertColMask==FALSE){
       msk<-gaps(msk, start=1, end=dims[2])
     }
@@ -485,6 +485,7 @@ function(filepath, format)
     }
     ## Split up the output into lines, but grouped into a list object
     names <- names(ch)
+    ## note simplify argument here is passed to .strChop, not lapply
     ch <- lapply(ch, .strChop, chopsize=55, simplify=FALSE)
     ## Again consider mask, split, name & cat on (if needed)
     if(hasMask){
