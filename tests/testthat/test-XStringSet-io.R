@@ -175,3 +175,21 @@ test_that("XStringSet read/write is correct", {
     unlink(tmpfilefq)
 })
 
+test_that("Writing XStringSets larger than IOBUF_SIZE functions correctly", {
+    ## IOBUF_SIZE is 200,003
+    tf <- tempfile()
+    set.seed(456L)
+    x1 <- paste(sample(DNA_BASES, 400020, replace=TRUE), collapse='')
+    x2 <- paste(sample(DNA_BASES, 200127, replace=TRUE), collapse='')
+    xss <- DNAStringSet(c(x1, x2))
+    names(xss) <- c("seq1", "seq2")
+    exp_output_fasta <- paste0('>seq1', x1, '>seq2', x2)
+    for(w in c(5, 80, 213, 200003, width(xss)[1], width(xss)[2])){
+      writeXStringSet(xss, tf, width = w)
+      opt <- readLines(tf)
+      opt <- paste(opt, collapse='')
+      expect_equal(opt, exp_output_fasta)
+      read_seqs <- readDNAStringSet(tf)
+      expect_true(all(as.character(read_seqs) == as.character(xss)))
+    }
+})
