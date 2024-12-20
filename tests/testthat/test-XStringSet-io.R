@@ -184,7 +184,7 @@ test_that("Writing XStringSets larger than IOBUF_SIZE functions correctly", {
     xss <- DNAStringSet(c(x1, x2))
     names(xss) <- c("seq1", "seq2")
     exp_output_fasta <- paste0('>seq1', x1, '>seq2', x2)
-    for(w in c(5, 80, 213, 200003, width(xss)[1], width(xss)[2])){
+    for(w in c(5, 80, 213, 200003, width(xss)[1], width(xss)[2], -1)){
       writeXStringSet(xss, tf, width = w)
       opt <- readLines(tf)
       opt <- paste(opt, collapse='')
