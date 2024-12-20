@@ -193,3 +193,25 @@ test_that("Writing XStringSets larger than IOBUF_SIZE functions correctly", {
       expect_true(all(as.character(read_seqs) == as.character(xss)))
     }
 })
+
+test_that("Writing QualityScaledXStringSets larger than IOBUF_SIZE functions correctly", {
+    ## IOBUF_SIZE is 200,003
+    tf <- tempfile()
+    set.seed(456L)
+    x1 <- paste(sample(DNA_BASES, 200127, replace=TRUE), collapse='')
+    x2 <- paste(sample(DNA_BASES, 400020, replace=TRUE), collapse='')
+    q1 <- paste(sample(as.character(1:9), 200127, replace=TRUE), collapse='')
+    q2 <- paste(sample(as.character(1:9), 400020, replace=TRUE), collapse='')
+    xss <- DNAStringSet(c(x1, x2))
+    quals <- PhredQuality(c(q1, q2))
+    names(xss) <- c("seq1", "seq2")
+    names(quals) <- c("seq1", "seq2")
+    exp_output_fastq <- paste0("@seq1", x1, "+seq1", q1, "@seq2", x2, "+seq2", q2)
+    qss <- QualityScaledDNAStringSet(xss, quals)
+    writeQualityScaledXStringSet(qss, tf)
+    opt <- paste(readLines(tf), collapse='')
+    expect_equal(opt, exp_output_fastq)
+    read_seqs <- readQualityScaledDNAStringSet(tf)
+    expect_true(all(as.character(read_seqs) == as.character(xss)))
+    expect_true(all(as.character(quality(read_seqs)) == as.character(quals)))
+})
