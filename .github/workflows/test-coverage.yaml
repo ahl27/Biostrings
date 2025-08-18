@@ -35,18 +35,21 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           working-directory: ./original-state
-          extra-packages: any::covr
+          extra-packages: any::covr, Seqinfo=?ignore
           needs: coverage
 
       - name: setup dependencies for new state
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          working-directory: ./new-state
+          working-directory: ./new-state, Seqinfo=?ignore
           extra-packages: any::covr
           needs: coverage
 
       - name: Test coverage on base branch
         run: |
+          ## additional installations in case things aren't working
+          BiocManager::install(version="devel", ask=FALSE)
+          BiocManager::install("Seqinfo")
           dirpath <- file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           dir.create(dirpath)
 
