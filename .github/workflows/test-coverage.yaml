@@ -34,7 +34,7 @@ jobs:
       - name: setup BiocManager to use devel installs
         run: |
           install.packages("BiocManager")
-          BiocManager::install(version="devel")
+          BiocManager::install(version="devel", ask=FALSE)
         shell: Rscript {0}
 
       - name: setup dependencies for old state
