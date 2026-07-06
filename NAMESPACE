@@ -1,7 +1,6 @@
 useDynLib(Biostrings)
 
 import(methods)
-importFrom(utils, data, packageVersion)
 importFrom(grDevices, rgb)
 importFrom(stats, chisq.test, complete.cases, diffinv, pchisq, setNames)
 
@@ -206,7 +205,6 @@ exportMethods(
 ### ==========================================================================
 ### STRING MATCHING
 ### --------------------------------------------------------------------------
-###   SparseList-class.R
 ###   MIndex-class.R
 ###   lowlevel-matching.R
 ###   match-utils.R
@@ -221,7 +219,7 @@ exportMethods(
 
 exportClasses(
     #SparseList,
-    MIndex, ByPos_MIndex,
+    MIndex, ByPos_MIndex, MIndexList,
     PreprocessedTB, Twobit, ACtree2,
     PDict3Parts,
     PDict, TB_PDict, MTB_PDict, Expanded_TB_PDict
@@ -307,9 +305,7 @@ exportClasses(
     XStringQuality, PhredQuality, SolexaQuality, IlluminaQuality,
     QualityScaledXStringSet,
     QualityScaledBStringSet, QualityScaledDNAStringSet,
-    QualityScaledRNAStringSet, QualityScaledAAStringSet,
-    MultipleAlignment,
-    DNAMultipleAlignment, RNAMultipleAlignment, AAMultipleAlignment
+    QualityScaledRNAStringSet, QualityScaledAAStringSet
 )
 
 export(
@@ -335,8 +331,7 @@ export(
     readRNAMultipleAlignment,
     readAAMultipleAlignment,
     consensusViews,
-    write.phylip,
-    detail
+    write.phylip
 )
 
 exportMethods(
@@ -350,13 +345,7 @@ exportMethods(
     parallelVectorNames,
     nchar, names, "names<-", "[[", windows,
     consensusMatrix, consensusString,
-    alphabetFrequency, as.list,
-
-    rowmask, "rowmask<-",
-    colmask, "colmask<-",
-    maskGaps,
-    maskednrow, maskedncol, maskeddim,
-    consensusViews
+    alphabetFrequency, as.list
 )
 
 
